@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="UnAventon.Models" assembly="UnAventon">
+  <class name="Viajes" table="UA_VIAJES">
+    <id name="Id">
+      <column name="ID" sql-type="NUMBER" not-null="true"/>
+      <generator class="SEQ_VIAJES_ID "/>
+    </id>
+    <property name="Precio">
+      <column name="PRECIO" type="NUMBER" not-null="true" />
+    </property>
+    <property name="FechaViaje">
+      <column name="FECHA_VIAJE" type="DATE" not-null="true" />
+    </property>
+    <property name="FechaBaja">
+      <column name="FECHA_BAJA" type="DATE" not-null="true" />
+    </property>
+    <property name="FechaAlta">
+      <column name="FECHA_ALTA" type="DATE" not-null="true" />
+    </property>
+    <property name="NViaje">
+      <column name="N_VIAJE" type="NUMBER" not-null="false" />
+    </property>
+    <property name="Periodico">
+      <column name="PERIODICO" type="NUMBER" not-null="true" />
+    </property>
+    <property name="CalificacionConductor">
+      <column name="CALIFICACION_CONDUCTOR" type="NUMBER" not-null="true" />
+    </property>
+  </class>
+</hibernate-mapping>
