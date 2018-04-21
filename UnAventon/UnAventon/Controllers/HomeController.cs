@@ -1,8 +1,11 @@
-﻿using System;
+﻿using NHibernate;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using UnAventon.Models;
+using UnAventon.NHibernate;
 
 namespace UnAventon.Controllers
 {
@@ -26,9 +29,28 @@ namespace UnAventon.Controllers
 
             return View();
         }
-        public ActionResult pepe()
+        
+        public ActionResult GuardarViaje()
         {
-            var a = 4;
+            ISession session = NHibernateHelper.GetCurrentSession();
+            try
+            {
+                using(ITransaction transaction = session.BeginTransaction())
+                {
+                    Viajes viaje = new Viajes();
+                    viaje.FechaAlta = DateTime.Now.Date;
+                    viaje.FechaViaje = DateTime.Now.AddDays(1);
+                    viaje.Periodico = 1;
+                    viaje.Precio = decimal.Parse("1,25");
+                    viaje.CalificacionConductor = 4;
+                    session.Save(viaje);
+                    transaction.Commit();
+                }
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
             return null;
         }
     }

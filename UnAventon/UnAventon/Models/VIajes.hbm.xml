@@ -3,28 +3,30 @@
   <class name="Viajes" table="UA_VIAJES">
     <id name="Id">
       <column name="ID" sql-type="NUMBER" not-null="true"/>
-      <generator class="SEQ_VIAJES_ID "/>
+      <generator class="sequence">
+        <param name="sequence">SEQ_VIAJES_ID</param>
+      </generator>
     </id>
     <property name="Precio">
-      <column name="PRECIO" type="NUMBER" not-null="true" />
+      <column name="PRECIO" sql-type="NUMBER" not-null="true" />
     </property>
     <property name="FechaViaje">
-      <column name="FECHA_VIAJE" type="DATE" not-null="true" />
+      <column name="FECHA_VIAJE" sql-type="DATE" not-null="true" />
     </property>
     <property name="FechaBaja">
-      <column name="FECHA_BAJA" type="DATE" not-null="true" />
+      <column name="FECHA_BAJA" sql-type="DATE" not-null="false" />
     </property>
     <property name="FechaAlta">
-      <column name="FECHA_ALTA" type="DATE" not-null="true" />
+      <column name="FECHA_ALTA" sql-type="DATE" not-null="true" />
     </property>
     <property name="NViaje">
-      <column name="N_VIAJE" type="NUMBER" not-null="false" />
+      <column name="N_VIAJE" sql-type="NUMBER" not-null="false" />
     </property>
     <property name="Periodico">
-      <column name="PERIODICO" type="NUMBER" not-null="true" />
+      <column name="PERIODICO" sql-type="NUMBER" not-null="true" />
     </property>
     <property name="CalificacionConductor">
-      <column name="CALIFICACION_CONDUCTOR" type="NUMBER" not-null="true" />
+      <column name="CALIFICACION_CONDUCTOR" sql-type="NUMBER" not-null="true" />
     </property>
   </class>
 </hibernate-mapping>

@@ -3,7 +3,7 @@ using System.Web;
 using NHibernate;
 using NHibernate.Cfg;
 
-namespace QuickStart
+namespace UnAventon.NHibernate
 {
     public sealed class NHibernateHelper
     {

@@ -11,7 +11,7 @@ namespace UnAventon.Models
         public virtual long Id { get; set; }
         public virtual decimal Precio { get; set; }
         public virtual DateTime FechaViaje { get; set; }
-        public virtual DateTime FechaBaja { get; set; }
+        public virtual DateTime? FechaBaja { get; set; }
         public virtual DateTime FechaAlta { get; set; }
         public virtual long NViaje { get; set; }
         public virtual long Periodico  { get; set; }
