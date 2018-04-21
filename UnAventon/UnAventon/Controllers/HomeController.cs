@@ -26,5 +26,9 @@ namespace UnAventon.Controllers
 
             return View();
         }
+        public ActionResult pepe()
+        {
+            a = List;
+        }
     }
 }
