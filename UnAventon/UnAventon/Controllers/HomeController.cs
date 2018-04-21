@@ -28,7 +28,8 @@ namespace UnAventon.Controllers
         }
         public ActionResult pepe()
         {
-            a = List;
+            var a = 4;
+            return null;
         }
     }
 }
