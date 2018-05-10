@@ -37,7 +37,14 @@ namespace UnAventon.Controllers
             {
                 using(ITransaction transaction = session.BeginTransaction())
                 {
-                    var viajes = session.QueryOver<Viajes>();
+                    Viajes viaje = new Viajes();
+                    viaje.FechaAlta = DateTime.Now.Date;
+                    viaje.FechaViaje = DateTime.Now.AddDays(1);
+                    viaje.Periodico = 1;
+                    viaje.Precio = decimal.Parse("1,25");
+                    viaje.CalificacionConductor = 4;
+                    session.Save(viaje);
+                    transaction.Commit();
                 }
             }
             catch(Exception e)

@@ -21,7 +21,6 @@ namespace UnAventon.NHibernate
             _sessionFactory = Fluently.Configure(cfg)
                 .Mappings(m =>
                 {
-                    //m.HbmMappings.AddFromAssemblyOf<Viajes>();
                     m.FluentMappings.AddFromAssemblyOf<ViajesMap>();
                 }).BuildSessionFactory();
         }
