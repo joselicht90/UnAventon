@@ -259,3 +259,9 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+*.config
+*.config
+*.config
+UnAventon/.vs/config/applicationhost.config
+*.ide
+UnAventon/.vs/UnAventon/v15/Server/sqlite3/storage.ide
