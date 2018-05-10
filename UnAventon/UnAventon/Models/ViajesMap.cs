@@ -11,7 +11,7 @@ namespace UnAventon.Models
         public ViajesMap()
         {
             Table("UA_VIAJES");
-            Id(x => x.Id, "ID").GeneratedBy.Native();
+            Id(x => x.Id, "ID").GeneratedBy.Sequence("SEQ_VIAJES_ID");
             Map(x => x.FechaAlta, "FECHA_ALTA").Not.Nullable();
         }
     }
