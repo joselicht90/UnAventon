@@ -177,8 +177,20 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Autos.cs" />
+    <Compile Include="Models\AutosMap.cs" />
+    <Compile Include="Models\Ciudades.cs" />
+    <Compile Include="Models\CiudadesMap.cs" />
     <Compile Include="Models\Comentarios.cs" />
     <Compile Include="Models\ComentariosMap.cs" />
+    <Compile Include="Models\Pasajeros.cs" />
+    <Compile Include="Models\PasajerosMap.cs" />
+    <Compile Include="Models\Provincias.cs" />
+    <Compile Include="Models\ProvinciasMap.cs" />
+    <Compile Include="Models\RespuestasComentarios.cs" />
+    <Compile Include="Models\RespuestasComentariosMap.cs" />
+    <Compile Include="Models\Usuarios.cs" />
+    <Compile Include="Models\UsuariosMap.cs" />
     <Compile Include="Models\Viajes.cs" />
     <Compile Include="Models\ViajesMap.cs" />
     <Compile Include="NHibernate\NHibernateHelper.cs" />
