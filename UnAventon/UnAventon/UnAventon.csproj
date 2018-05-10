@@ -177,6 +177,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Comentarios.cs" />
+    <Compile Include="Models\ComentariosMap.cs" />
     <Compile Include="Models\Viajes.cs" />
     <Compile Include="Models\ViajesMap.cs" />
     <Compile Include="NHibernate\NHibernateHelper.cs" />
