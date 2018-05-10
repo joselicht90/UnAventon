@@ -2,6 +2,9 @@
 using System.Web;
 using NHibernate;
 using NHibernate.Cfg;
+using FluentNHibernate.Cfg;
+using FluentNHibernate;
+using UnAventon.Models;
 
 namespace UnAventon.NHibernate
 {
@@ -12,11 +15,20 @@ namespace UnAventon.NHibernate
 
         static NHibernateHelper()
         {
-            _sessionFactory = new Configuration().Configure().BuildSessionFactory();
+            var cfg = new Configuration();
+            cfg.Configure();
+            //_sessionFactory = new Configuration().Configure().BuildSessionFactory();
+            _sessionFactory = Fluently.Configure(cfg)
+                .Mappings(m =>
+                {
+                    //m.HbmMappings.AddFromAssemblyOf<Viajes>();
+                    m.FluentMappings.AddFromAssemblyOf<ViajesMap>();
+                }).BuildSessionFactory();
         }
 
         public static ISession GetCurrentSession()
         {
+            
             var context = HttpContext.Current;
             var currentSession = context.Items[CurrentSessionKey] as ISession;
 
