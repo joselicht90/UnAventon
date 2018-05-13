@@ -7,11 +7,38 @@
     <div class="modal-dialog">
         <div class="main-login main-center">
             <div class="form-group">
+                <label for="email" class="cols-sm-2 control-label">Nombre</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese su/s nombres" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="cols-sm-2 control-label">Apellido</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Ingrese su/s apellidos" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="cols-sm-2 control-label">Fecha de nacimiento</label>
+                <div class="cols-sm-10">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar" aria-hidden="true"></i></span>
+                        <input type="text" class="form-control" name="fechaNacimiento" id="fechaNacimiento" placeholder="dd/MM/aaaa" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="email" class="cols-sm-2 control-label">Email</label>
                 <div class="cols-sm-10">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i></span>
-                        <input type="text" class="form-control" name="email" id="email" placeholder="Ingrese un e-mail" />
+                        <input type="text" class="form-control" id="emailNuevoUsuario" placeholder="Ingrese un e-mail" />
                     </div>
                 </div>
             </div>
@@ -20,7 +47,7 @@
                 <div class="cols-sm-10">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock" aria-hidden="true"></i></span>
-                        <input type="password" class="form-control" name="password" id="password" placeholder="Ingrese una contraseña" />
+                        <input type="password" class="form-control" name="passwordNuevoUsuario" id="passwordNuevoUsuario" placeholder="Ingrese una contraseña" />
                     </div>
                 </div>
             </div>
@@ -29,20 +56,97 @@
                 <div class="cols-sm-10">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock" aria-hidden="true"></i></span>
-                        <input type="password" class="form-control" name="confirm" id="confirm" placeholder="Confirme su contraseña" />
+                        <input type="password" class="form-control" name="confirmarPassword" id="confirmarPassword" placeholder="Confirme su contraseña" />
                     </div>
                 </div>
             </div>
             <div class="form-group ">
-                <button type="button" class="btn btn-primary btn-lg btn-block login-button">Registrarse</button>
+                <button type="button" onclick="registrarNuevoUsuario()" class="btn btn-primary btn-lg btn-block login-button">Registrarse</button>
             </div>
         </div>
     </div>
 </div>
 <script>
-    function check(value) {
-        //if (value.trim() == "") {
-        //    document.getElementById('errorname').innerHTML = "this is an invalid name";
-        //}
+    function SiValidaFecha(fecha) {
+        var regex = /^(((0[1 - 9] | [12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/;
+        return regex.test(fecha);
+    }
+    function SiValidaCampos() {
+        if ($("#nombre").val() == "" || $("#apellido").val() == "" || $("#fechaNacimiento").val() == "" || $("#emailNuevoUsuario").val() == "" || $("#passwordNuevoUsuario").val() == "" || $("#confirmarPassword").val() == "") {
+            return false;
+        }
+        return true;
+    }
+    function registrarNuevoUsuario() {
+        debugger;
+        if (!SiValidaCampos()) {
+            Swal({
+                text: "Todos los campos son obligatorios.",
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: 'Aceptar',
+                closeOnConfirm: true
+            })
+        }
+        else if (!SiValidaFecha($("#fechaNacimiento").val())) {
+            Swal({
+                text: "La fecha ingresada no es valida. El formato es dd/MM/aaaa.",
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: 'Aceptar',
+                closeOnConfirm: true
+            })
+        }
+        else if ($("#confirmarPassword").val() != $("#passwordNuevoUsuario").val()) {
+            $("#confirmarPassword").val("");
+            $("#passwordNuevoUsuario").val("");
+            Swal({
+                text: "Las contraseñas no coinciden",
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: 'Aceptar',
+                closeOnConfirm: true
+            })
+        }
+        else {
+            $.ajax({
+            url: '@Url.Action("RegistrarUsuario","Home")',
+            data: {
+                nombre: $("#nombre").val(),
+                apellido: $("#apellido").val(),
+                fechaNacimiento: $("#fechaNacimiento").val(),
+                email: $("#emailNuevoUsuario").val(),
+                password: $("#passwordNuevoUsuario").val(),
+                confirmarPassword: $("#confirmarPassword").val(),
+            },
+            success: function (data) {
+                if (data.mensaje == "") {
+                    Swal({
+                        text: "El registro ha sido exitoso.",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonText: 'Aceptar',
+                        closeOnConfirm: false
+                    },
+                        function(isConfirm) {
+                            if (isConfirm) {
+                                window.location = '@Url.Action("Index","Home")';
+                            }
+                        }
+                    );
+                }
+                else {
+                    Swal({
+                        text: data.mensaje,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Aceptar',
+                        closeOnConfirm: true
+                    })
+                }
+
+             }
+            });
+        }
     }
 </script>

@@ -46,6 +46,43 @@ namespace UnAventon.Controllers
             }
         }
 
+        public JsonResult RegistrarUsuario(string nombre, string apellido, string fechaNacimiento, string email ,string password, string confirmarPassword)
+        {
+            try
+            {
+                ISession session = NHibernateHelper.GetCurrentSession();
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    ICriteria searchUsuario = session.CreateCriteria<Usuarios>();
+                    searchUsuario.Add(Expression.Eq("Email", email));
+                    Usuarios usuarioRegistrado = searchUsuario.UniqueResult<Usuarios>();
+                    if(usuarioRegistrado == null)
+                    {
+                        usuarioRegistrado = new Usuarios();
+                        usuarioRegistrado.Nombre = nombre;
+                        usuarioRegistrado.Apellido = apellido;
+                        usuarioRegistrado.FNacimiento = DateTime.Parse(fechaNacimiento);
+                        usuarioRegistrado.Password = password;
+                        usuarioRegistrado.PReputacion = 0;
+                        usuarioRegistrado.CReputacion = 0;
+                        usuarioRegistrado.Email = email;
+                        session.Save(usuarioRegistrado);
+                        transaction.Commit();
+                        Session["UsuarioLogueado"] = usuarioRegistrado;
+                        return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new { mensaje = "Ya existe un usuario registrado con este mail." }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { mensaje = "Ha ocurrido un error al intentar registrar el usuario." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
