@@ -1,4 +1,5 @@
 ﻿using NHibernate;
+using NHibernate.Criterion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,35 @@ namespace UnAventon.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        public JsonResult Login(string email, string password)
+        {
+            
+            try
+            {
+                ISession session = NHibernateHelper.GetCurrentSession();
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    ICriteria searchUsuario = session.CreateCriteria<Usuarios>();
+                    searchUsuario.Add(Expression.Eq("Email", email));
+                    searchUsuario.Add(Expression.Eq("Password", password));
+                    Usuarios usuario = searchUsuario.UniqueResult<Usuarios>();
+                    if(usuario != null)
+                    {
+                        Session["UsuarioLogueado"] = usuario;
+                        return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new { mensaje = "El nombre de usuario y/o contraseña son incorrectos" }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                return Json(new { mensaje = "Ha ocurrido un error al intentar iniciar sesion." }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public ActionResult About()

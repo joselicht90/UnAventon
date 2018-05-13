@@ -15,6 +15,7 @@ namespace UnAventon.Models
         public virtual DateTime FNacimiento { get; set; }
         public virtual long CReputacion { get; set; }
         public virtual long PReputacion { get; set; }
+        public virtual string Password { get; set; }
     }
 }
 
