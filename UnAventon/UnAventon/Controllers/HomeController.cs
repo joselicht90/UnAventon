@@ -17,6 +17,11 @@ namespace UnAventon.Controllers
             return View();
         }
 
+        public ActionResult Logout()
+        {
+            Session["UsuarioLogueado"] = null;
+            return RedirectToAction("Index");
+        }
         public JsonResult Login(string email, string password)
         {
             

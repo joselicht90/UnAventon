@@ -1,4 +1,5 @@
 ﻿<script src="~/Scripts/swal.js"></script>
+<link href="~/Content/jquery.loadingModal.css" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!DOCTYPE html>
 <html>
@@ -13,16 +14,10 @@
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#1093f2">
         <a class="navbar-brand custom" style="color:white; font-family:'Comic Sans MS'; font-weight:bold" href=""><img height="60px" src="~/Content/UALogo.png" />UnAventon</a>
-
         <div class="navbar-header">
-
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
         </div>
         <div class="navbar-collapse collapse">
+            @*Botones de la barra de navegacion*@
             <ul class="nav navbar-nav navbar-left">
                 <li style="margin-left: 700px">
                     <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" href="#">Buscar Viajes</button>
@@ -35,15 +30,15 @@
                 </li>
 
             </ul>
+            @*Dropdown toggle, permite algunas opciones de menu para loguearse o para el usuario logueado*@
             @if (Session["UsuarioLogueado"] == null)
             {
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><p style="color:aliceblue; font-size: large;padding-top: 5px;">Login</p></a>
-                        <ul id="login-dp" class="dropdown-menu" style="background-color:#808080">
+                        <ul id="login-dp" class="dropdown-menu" style="background-color:#808080; width:20em">
                             <li>
                                 <div class="col-md-12">
-
                                     <div class="input-group" style="margin-bottom:10px">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                         <input id="email" type="text" class="form-control" name="email" placeholder="Email">
@@ -64,28 +59,26 @@
                     </li>
                 </ul>
             }
-            @*else
+            else
             {
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><p style="color:aliceblue; font-size: large;padding-top: 5px;"><img class="glyphicon glyphicon-user"> @((UnAventon.Models.Usuarios)Session["UsuarioLogueado"].Nombre)</p></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:aliceblue; font-size: large;padding-top: 5px;">Jose <img src="~/Content/Avatars/ob_bb2ed3_forum-avatar-37.gif" style="width:50px" /></a>
                         <ul id="login-dp" class="dropdown-menu" style="background-color:#808080">
                             <li>
-                               <p>prueba</p>
+                                <div class="bottom text-center">
+                                    <a onclick="cerrarSesion()" href="#"><b>Cerrar Sesion</b></a>
+                                </div>
                             </li>
                         </ul>
                     </li>
                 </ul>
-            }*@
+            }
 
         </div>
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Un Aventón</p>
-        </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
@@ -94,8 +87,10 @@
 </body>
 </html>
 @Html.Partial("_RegistroUsuario")
+<script src="~/Scripts/jquery.loadingModal.js"></script>
 <script>
     $(document).ready(function () {
+        //Deshabilita el boton si no los capos no estan escritos
         $('#loginBtn').attr('disabled', true);
         $('#password').keyup(function () {
             if ($(this).val().length != 0 && $("#email").val().length != 0)
@@ -109,12 +104,14 @@
             else
                 $('#loginBtn').attr('disabled', true);
         });
+        //Evita que el dropdown se cierre al tocar un boton
+        $('.dropdown-menu').click(function (e) {
+            e.stopPropagation();
+        });
     });
 
-    $('.dropdown-menu').click(function (e) {
-        e.stopPropagation();
-    });
 
+    //Inicia sesion
     function iniciarSesion() {
         $.ajax({
             url: '@Url.Action("Login","Home")',
@@ -122,11 +119,19 @@
                 email: $("#email").val(),
                 password: $("#password").val()
             },
+            beforeSend: function (xhr) {
+                //Template de loading
+                Loading();
+            },
             success: function (data) {
                 if (data.mensaje == "") {
-                    window.location = '@Url.Action("Login","Home")';
+                    $("#email").val("");
+                    $("#password").val("");
+                    window.location = '@Url.Action("Index","Home")';
                 }
                 else {
+                    $("#email").val("");
+                    $("#password").val("");
                     Swal({
                         text: data.mensaje,
                         type: 'error',
@@ -139,8 +144,27 @@
             }
         });
     }
+    //Registro de usuario
     function registro() {
+        //modal de registro
         $("#modalRegistro").modal();
+    }
+    //Cerrar sesion
+    function cerrarSesion() {
+        Loading();
+        window.location = '@Url.Action("Logout","Home")';
+    }
+
+    //Metodo que llama al template de loading
+    function Loading() {
+        $('body').loadingModal({
+	      position: 'auto',
+	      text: '',
+	      color: '#fff',
+	      opacity: '0.7',
+	      backgroundColor: 'rgb(0,0,0)',
+	      animation: 'doubleBounce'
+        });
     }
 
 
