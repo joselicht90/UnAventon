@@ -174,6 +174,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -203,6 +204,9 @@
     <Content Include="Content\bootstrap.min.css" />
     <EmbeddedResource Include="Content\UALogo.png" />
     <Content Include="Content\Carpooling.jpg" />
+    <EmbeddedResource Include="Content\Icons\icon.png" />
+    <EmbeddedResource Include="Content\Icons\star.png" />
+    <Content Include="Content\dataTables.bootstrap4.css" />
     <Content Include="Content\jquery.loadingModal.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -214,9 +218,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\datatables.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery.loadingModal.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -243,6 +249,9 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\swal.js" />
     <Content Include="Views\Shared\_RegistroUsuario.cshtml" />
+    <Content Include="Views\Usuario\MiPerfil.cshtml" />
+    <Content Include="Views\Usuario\_ListadoAutos.cshtml" />
+    <Content Include="Views\Usuario\_NuevoAuto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

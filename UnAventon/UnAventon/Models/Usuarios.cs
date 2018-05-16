@@ -16,6 +16,7 @@ namespace UnAventon.Models
         public virtual long CReputacion { get; set; }
         public virtual long PReputacion { get; set; }
         public virtual string Password { get; set; }
+        public virtual IList<Autos> Autos { get; set; }
     }
 }
 

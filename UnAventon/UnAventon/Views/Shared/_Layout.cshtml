@@ -36,7 +36,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><p style="color:aliceblue; font-size: large;padding-top: 5px;">Login</p></a>
-                        <ul id="login-dp" class="dropdown-menu" style="background-color:#808080; width:20em">
+                        <ul id="login-dp" class="dropdown-menu" style="background-color:#c3c3c3; width:20em">
                             <li>
                                 <div class="col-md-12">
                                     <div class="input-group" style="margin-bottom:10px">
@@ -64,7 +64,12 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="color:aliceblue; font-size: large;padding-top: 5px;">Jose <img src="~/Content/Avatars/ob_bb2ed3_forum-avatar-37.gif" style="width:50px" /></a>
-                        <ul id="login-dp" class="dropdown-menu" style="background-color:#808080">
+                        <ul id="login-dp" class="dropdown-menu" style="background-color:#c3c3c3; width:5em">
+                            <li style="margin-bottom:5px">
+                                <div class="text-center">
+                                    <button id="miPerfil" type="button" onclick="miPerfil()" class="btn btn-primary btn-block" style="font-size:larger">Mi Perfil</button>
+                                </div>
+                            </li>
                             <li>
                                 <div class="bottom text-center">
                                     <a onclick="cerrarSesion()" href="#"><b>Cerrar Sesion</b></a>
@@ -77,15 +82,16 @@
 
         </div>
     </div>
-    <div class="container body-content">
+    <div class="body-content" style="margin-top:5em; padding-left:10em; padding-right:10em">
         @RenderBody()
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+
 </body>
 </html>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("Scripts", required: false)
 @Html.Partial("_RegistroUsuario")
 <script src="~/Scripts/jquery.loadingModal.js"></script>
 <script>
@@ -110,6 +116,10 @@
         });
     });
 
+    function miPerfil() {
+        Loading();
+        window.location = '@Url.Action("MiPerfil","Usuario")';
+    }
 
     //Inicia sesion
     function iniciarSesion() {
@@ -130,6 +140,7 @@
                     window.location = '@Url.Action("Index","Home")';
                 }
                 else {
+                    $("body").loadingModal('hide');
                     $("#email").val("");
                     $("#password").val("");
                     Swal({

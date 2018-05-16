@@ -1,0 +1,116 @@
+﻿@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <script src="~/Scripts/datatables.js"></script>*@
+
+<link href="~/Content/jquery.loadingModal.css" rel="stylesheet" />
+
+@*<link href="~/Content/dataTables.bootstrap4.css" rel="stylesheet" />*@
+
+@using UnAventon.Models
+@model Usuarios
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Mi Perfil";
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active" style="background-color:white"><a href="#step1" data-toggle="tab" aria-expanded="true" style="font-size:x-large"><i class="glyphicon glyphicon-user"></i> Mis Datos</a></li>
+            <li class="" style="background-color:white"><a href="#step2" data-toggle="tab" aria-expanded="true" style="font-size:x-large"><i class="glyphicon glyphicon-list"></i> Mis Autos</a></li>
+        </ul>
+        <div class="tab-content clearfix" style="margin-top:2em">
+            <div class="tab-pane fade active in" id="step1">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <img src="~/Content/Avatars/ob_bb2ed3_forum-avatar-37.gif" width="200px" style="float:right" />
+
+                        </div>
+                        <div class="col-xs-6">
+                            <p style="font-size:x-large"><label>Nombre:</label> @Model.Nombre</p>
+                            <p style="font-size:x-large"><label>Apellido:</label> @Model.Apellido</p>
+                            <p style="font-size:x-large"><label>Email:</label> @Model.Email</p>
+                            <p style="font-size:x-large"><label>Fecha de Nacimiento:</label> @string.Format("{0:dd/MM/yyyy}", Model.FNacimiento)</p>
+                            <p>
+                                <img src="~/Content/Icons/star.png" width="50px" /> <b style="font-size:x-large">@Model.CReputacion</b>
+                                <img src="~/Content/Icons/icon.png" width="50px" style="margin-left:30px" /> <b style="font-size:x-large">@Model.PReputacion</b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="step2">
+                @Html.Partial("_ListadoAutos")
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_NuevoAuto")
+@section Scripts{
+    <script src="~/Scripts/jquery.loadingModal.js"></script>
+    <script>
+    //$(document).ready(function () {
+    //    //$("#tablaAutos").DataTable();
+    //});
+
+    function nuevoAuto() {
+        //modal de registro
+        $("#modalAuto").modal();
+    }
+    function guardarAuto() {
+         $.ajax({
+            url: '@Url.Action("GuardarAuto","Usuario")',
+            data: {
+                marca: $("#marca").val(),
+                modelo: $("#modelo").val(),
+                patente: $("#patente").val(),
+                asientos: $("#asientos").val(),
+                idUsuario: @Model.Id
+            },
+            beforeSend: function (xhr) {
+                //Template de loading
+                Loading();
+            },
+            success: function (data) {
+                if (data.mensaje == "") {
+                    $("#modalAuto").modal("hide");
+                    $("#marca").val("");
+                    $("#modelo").val("");
+                    $("#patente").val("");
+                    $("#asientos").val("");
+                    Swal({
+                        text: "El auto ha sido guardado con exito.",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Aceptar',
+                        closeOnConfirm: false
+                    },
+                        function (isConfirm) {
+                            if (isConfirm) {
+                                window.location.reload();
+                            }
+                        }
+                    )
+                }
+                else {
+                    $("#modalAuto").modal("hide");
+                    $("body").loadingModal('hide');
+                    $("#email").val("");
+                    $("#password").val("");
+                    Swal({
+                        text: data.mensaje,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Aceptar',
+                        closeOnConfirm: true
+                    })
+                }
+
+            }
+        });
+    }
+    </script>
+}
+
