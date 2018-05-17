@@ -271,3 +271,6 @@ UnAventon/.vs/UnAventon/v15/Server/sqlite3/storage.ide
 *.dll
 UnAventon/.vs/config/applicationhost.config
 UnAventon/UnAventon/obj/Debug/UnAventon.csproj.CoreCompileInputs.cache
+UnAventon/UnAventon/Web.config
+UnAventon/UnAventon/Web.config
+UnAventon/UnAventon/Web.config

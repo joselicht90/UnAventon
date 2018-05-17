@@ -13,6 +13,7 @@ namespace UnAventon.Models
         public virtual string Modelo { get; set; }
         public virtual string Patente { get; set; }
         public virtual long Asientos { get; set; }
+        public virtual long UsuarioId { get; set; }
     }
 }
 

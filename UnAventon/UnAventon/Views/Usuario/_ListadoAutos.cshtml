@@ -26,7 +26,7 @@
                     <td>@auto.Modelo</td>
                     <td>@auto.Patente</td>
                     <td>@auto.Asientos</td>
-                    <td class="glyphicon glyphicon-remove"> </td>
+                    <td><a class="glyphicon glyphicon-edit" onclick="editarAuto('@auto.Marca', '@auto.Modelo', '@auto.Patente', '@auto.Asientos')"></a> || <a class="glyphicon glyphicon-remove-circle"onclick="borrarAuto('@auto.Id')"></a> </td>
                 </tr>
             }
         </table>

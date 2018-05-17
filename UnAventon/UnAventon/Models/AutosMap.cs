@@ -16,6 +16,7 @@ namespace UnAventon.Models
             Map(x => x.Modelo, "MODELO").Not.Nullable();
             Map(x => x.Patente, "PATENTE").Not.Nullable();
             Map(x => x.Asientos, "ASIENTOS").Not.Nullable();
+            Map(x => x.UsuarioId, "USUARIO_ID").Not.Nullable();
         }
     }
 }

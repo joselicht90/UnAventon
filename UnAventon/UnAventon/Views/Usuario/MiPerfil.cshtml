@@ -3,8 +3,7 @@
     <script src="~/Scripts/datatables.js"></script>*@
 
 <link href="~/Content/jquery.loadingModal.css" rel="stylesheet" />
-
-@*<link href="~/Content/dataTables.bootstrap4.css" rel="stylesheet" />*@
+<link href="~/Content/dataTables.bootstrap4.css" rel="stylesheet" />
 
 @using UnAventon.Models
 @model Usuarios
@@ -47,17 +46,92 @@
         </div>
     </div>
 </div>
+@Html.Hidden("IdAutoSeleccionado")
 @Html.Partial("_NuevoAuto")
+@Html.Partial("_EditarAuto")
 @section Scripts{
     <script src="~/Scripts/jquery.loadingModal.js"></script>
+    <script src="~/Scripts/datatables.js"></script>
     <script>
-    //$(document).ready(function () {
-    //    //$("#tablaAutos").DataTable();
-    //});
+    $(document).ready(function () {
+        $("#tablaAutos").DataTable({
+            "searching": false,
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ elementos por pagina",
+                "zeroRecords": "Nada encontrado",
+                "info": "Mostrando pagina _PAGE_ de _PAGES_",
+                "infoEmpty": "No hay registros.",
+                "infoFiltered": "(filtrado de _MAX_ elementos)"
+            },
+            "aoColumnDefs": [
+                { aTargets: [4], bSortable: false },
+            ]
+        });
+    });
 
+    function editarAuto(marca, modelo, patente, asientos, idAuto) {
+        $("#modalAutoEditar").modal();
+        $("#marcaEditar").val(marca);
+        $("#modeloEditar").val(modelo);
+        $("#patenteEditar").val(patente);
+        $("#asientosEditar").val(asientos);
+        $("#IdAutoSeleccionado").val(idAuto);
+    }
     function nuevoAuto() {
-        //modal de registro
         $("#modalAuto").modal();
+        }
+    function guardarAutoEditar() {
+        $.ajax({
+            url: '@Url.Action("EditarAuto","Usuario")',
+            data: {
+                marca: $("#marcaEditar").val(),
+                modelo: $("#modeloEditar").val(),
+                patente: $("#patenteEditar").val(),
+                asientos: $("#asientosEditar").val(),
+                idAuto: $("#IdAutoSeleccionado").val()
+            },
+            beforeSend: function (xhr) {
+                //Template de loading
+                Loading();
+            },
+            success: function (data) {
+                if (data.mensaje == "") {
+                    $("body").loadingModal('hide');
+                    $("#modalAuto").modal("hide");
+                    $("#marca").val("");
+                    $("#modelo").val("");
+                    $("#patente").val("");
+                    $("#asientos").val("");
+                    swal({
+                        title: "",
+                        text: "El auto ha sido editado con exito.",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Aceptar',
+                        closeOnConfirm: false
+                    },
+                        function () {
+                                window.location.reload();
+                        }
+                    )
+                }
+                else {
+                    $("#modalAuto").modal("hide");
+                    $("body").loadingModal('hide');
+                    $("#email").val("");
+                    $("#password").val("");
+                    swal({
+                        title: "",
+                        text: data.mensaje,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Aceptar',
+                        closeOnConfirm: true
+                    })
+                }
+
+            }
+         });
     }
     function guardarAuto() {
          $.ajax({
@@ -75,12 +149,14 @@
             },
             success: function (data) {
                 if (data.mensaje == "") {
+                    $("body").loadingModal('hide');
                     $("#modalAuto").modal("hide");
                     $("#marca").val("");
                     $("#modelo").val("");
                     $("#patente").val("");
                     $("#asientos").val("");
-                    Swal({
+                    swal({
+                        title: "",
                         text: "El auto ha sido guardado con exito.",
                         type: 'success',
                         showCancelButton: false,
@@ -99,7 +175,8 @@
                     $("body").loadingModal('hide');
                     $("#email").val("");
                     $("#password").val("");
-                    Swal({
+                    swal({
+                        title: "",
                         text: data.mensaje,
                         type: 'error',
                         showCancelButton: false,
@@ -122,6 +199,8 @@
                 //Template de loading
                 Loading();
             },
+
+         });
     }
     </script>
 }
