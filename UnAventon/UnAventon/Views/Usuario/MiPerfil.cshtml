@@ -110,6 +110,18 @@
 
             }
         });
+        }
+    function borrarAuto()
+    {
+        $.ajax({
+            url: '@Url.Action("BorrarAuto","Usuario")',
+            data: {
+                id: $("#id").val(),
+            },
+            beforeSend: function (xhr) {
+                //Template de loading
+                Loading();
+            },
     }
     </script>
 }

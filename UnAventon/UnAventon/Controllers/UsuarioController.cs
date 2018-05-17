@@ -43,5 +43,22 @@ namespace UnAventon.Controllers
                 return Json(new { mensaje = "Ha ocurrido un error al intentar guardar el nuevo auto." }, JsonRequestBehavior.AllowGet);
             }
         }
-    }
+        public JsonResult BorrarAuto(string id)
+        {
+            try
+            {
+                ISession session = NHibernateHelper.GetCurrentSession();
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    Autos auto = session.QueryOver<Autos>().Where(x => x.Id == long.Parse(id)).SingleOrDefault();
+                    session.Delete(auto);
+                    transaction.Commit();
+                    return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { mensaje = "Ha ocurrido un error al intentar borrar el nuevo auto." }, JsonRequestBehavior.AllowGet);
+            }
+        }
 }
