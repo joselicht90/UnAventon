@@ -201,6 +201,7 @@
     <Content Include="Content\4.jpg" />
     <Content Include="Content\Avatars\ob_bb2ed3_forum-avatar-37.gif" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\sweetalert.css" />
     <Content Include="Content\bootstrap.min.css" />
     <EmbeddedResource Include="Content\UALogo.png" />
     <Content Include="Content\Carpooling.jpg" />

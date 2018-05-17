@@ -1,4 +1,4 @@
-﻿<script src="~/Scripts/swal.js"></script>
+﻿<link href="~/Content/sweetalert.css" rel="stylesheet" />
 <link href="~/Content/jquery.loadingModal.css" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!DOCTYPE html>
@@ -93,6 +93,7 @@
 @Scripts.Render("~/bundles/bootstrap")
 @RenderSection("Scripts", required: false)
 @Html.Partial("_RegistroUsuario")
+<script src="~/Scripts/swal.js"></script>
 <script src="~/Scripts/jquery.loadingModal.js"></script>
 <script>
     $(document).ready(function () {
@@ -143,7 +144,8 @@
                     $("body").loadingModal('hide');
                     $("#email").val("");
                     $("#password").val("");
-                    Swal({
+                    swal({
+                        title: "",
                         text: data.mensaje,
                         type: 'error',
                         showCancelButton: false,
@@ -189,7 +191,8 @@
     }
     function registrarNuevoUsuario() {
         if (!SiValidaCampos()) {
-            Swal({
+            swal({
+                title:"",
                 text: "Todos los campos son obligatorios.",
                 type: "error",
                 showCancelButton: false,
@@ -197,7 +200,8 @@
             })
         }
         else if (!SiValidaFecha($("#fechaNacimiento").val())) {
-            Swal({
+            swal({
+                title: "",
                 text: "La fecha ingresada no es valida. El formato es dd/MM/aaaa.",
                 type: "error",
                 showCancelButton: false,
@@ -208,7 +212,8 @@
         else if ($("#confirmarPassword").val() != $("#passwordNuevoUsuario").val()) {
             $("#confirmarPassword").val("");
             $("#passwordNuevoUsuario").val("");
-            Swal({
+            swal({
+                title: "",
                 text: "Las contraseñas no coinciden",
                 type: "error",
                 showCancelButton: false,
@@ -233,23 +238,13 @@
                 success: function (data) {
                     //$("#modalRegistro").modal("hide");
                     $("body").loadingModal("hide");
-                if (data.mensaje == "") {
-                    Swal({
-                        text: "El registro ha sido exitoso.",
-                        type: "success",
-                        showCancelButton: false,
-                        confirmButtonText: 'Aceptar'
-                    },
-                        function(isConfirm) {
-                            if (isConfirm) {
-                                Loading();
-                                window.location = '@Url.Action("LoginRegistro","Home")'+"?email=" + $("#emailNuevoUsuario").val() + "&password=" + $("#passwordNuevoUsuario").val();
-                            }
-                        }
-                    );
+                    if (data.mensaje == "") {
+                        window.location = '@Url.Action("LoginRegistro","Home")' + "?email=" + $("#emailNuevoUsuario").val() + "&password=" + $("#passwordNuevoUsuario").val();
+
                 }
                 else {
-                    Swal({
+                    swal({
+                        title: "",
                         text: data.mensaje,
                         type: 'error',
                         showCancelButton: false,

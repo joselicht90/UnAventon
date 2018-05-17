@@ -22,7 +22,7 @@ namespace UnAventon.Controllers
             Session["UsuarioLogueado"] = null;
             return RedirectToAction("Index");
         }
-        [HttpPost]
+        
         public ActionResult LoginRegistro(string email, string password)
         {
             ISession session = NHibernateHelper.GetCurrentSession();

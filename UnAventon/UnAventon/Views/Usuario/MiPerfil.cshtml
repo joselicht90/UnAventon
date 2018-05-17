@@ -46,7 +46,9 @@
         </div>
     </div>
 </div>
+@Html.Hidden("IdAutoSeleccionado")
 @Html.Partial("_NuevoAuto")
+@Html.Partial("_EditarAuto")
 @section Scripts{
     <script src="~/Scripts/jquery.loadingModal.js"></script>
     <script src="~/Scripts/datatables.js"></script>
@@ -67,17 +69,18 @@
         });
     });
 
-    function nuevoAuto(marca, modelo, patente, asientos) {
+    function editarAuto(marca, modelo, patente, asientos, idAuto) {
         $("#modalAutoEditar").modal();
         $("#marcaEditar").val(marca);
         $("#modeloEditar").val(modelo);
         $("#patenteEditar").val(patente);
         $("#asientosEditar").val(asientos);
+        $("#IdAutoSeleccionado").val(idAuto);
     }
     function nuevoAuto() {
         $("#modalAuto").modal();
         }
-    function guardarAutoEditar(idAuto) {
+    function guardarAutoEditar() {
         $.ajax({
             url: '@Url.Action("EditarAuto","Usuario")',
             data: {
@@ -85,7 +88,7 @@
                 modelo: $("#modeloEditar").val(),
                 patente: $("#patenteEditar").val(),
                 asientos: $("#asientosEditar").val(),
-                idAuto: idAuto
+                idAuto: $("#IdAutoSeleccionado").val()
             },
             beforeSend: function (xhr) {
                 //Template de loading
@@ -99,17 +102,16 @@
                     $("#modelo").val("");
                     $("#patente").val("");
                     $("#asientos").val("");
-                    Swal({
+                    swal({
+                        title: "",
                         text: "El auto ha sido editado con exito.",
                         type: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'Aceptar',
                         closeOnConfirm: false
                     },
-                        function (isConfirm) {
-                            if (isConfirm) {
+                        function () {
                                 window.location.reload();
-                            }
                         }
                     )
                 }
@@ -118,7 +120,8 @@
                     $("body").loadingModal('hide');
                     $("#email").val("");
                     $("#password").val("");
-                    Swal({
+                    swal({
+                        title: "",
                         text: data.mensaje,
                         type: 'error',
                         showCancelButton: false,
@@ -129,7 +132,7 @@
 
             }
          });
-    }    
+    }
     function guardarAuto() {
          $.ajax({
             url: '@Url.Action("GuardarAuto","Usuario")',
@@ -152,7 +155,8 @@
                     $("#modelo").val("");
                     $("#patente").val("");
                     $("#asientos").val("");
-                    Swal({
+                    swal({
+                        title: "",
                         text: "El auto ha sido guardado con exito.",
                         type: 'success',
                         showCancelButton: false,
@@ -171,7 +175,8 @@
                     $("body").loadingModal('hide');
                     $("#email").val("");
                     $("#password").val("");
-                    Swal({
+                    swal({
+                        title: "",
                         text: data.mensaje,
                         type: 'error',
                         showCancelButton: false,
