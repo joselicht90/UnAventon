@@ -22,6 +22,21 @@ namespace UnAventon.Controllers
             Session["UsuarioLogueado"] = null;
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        public ActionResult LoginRegistro(string email, string password)
+        {
+            ISession session = NHibernateHelper.GetCurrentSession();
+            ICriteria searchUsuario = session.CreateCriteria<Usuarios>();
+            searchUsuario.Add(Expression.Eq("Email", email));
+            searchUsuario.Add(Expression.Eq("Password", password));
+            Usuarios usuario = searchUsuario.UniqueResult<Usuarios>();
+            if (usuario != null)
+            {
+                Session["UsuarioLogueado"] = usuario;
+                Session["UsuarioLogueadoNombre"] = usuario.Nombre;
+            }
+            return RedirectToAction("Index");
+        }
         public JsonResult Login(string email, string password)
         {
             
@@ -37,6 +52,7 @@ namespace UnAventon.Controllers
                     if(usuario != null)
                     {
                         Session["UsuarioLogueado"] = usuario;
+                        Session["UsuarioLogueadoNombre"] = usuario.Nombre;
                         return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
                     }
                     else

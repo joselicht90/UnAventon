@@ -252,6 +252,7 @@
     <Content Include="Views\Usuario\MiPerfil.cshtml" />
     <Content Include="Views\Usuario\_ListadoAutos.cshtml" />
     <Content Include="Views\Usuario\_NuevoAuto.cshtml" />
+    <Content Include="Views\Usuario\_EditarAuto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

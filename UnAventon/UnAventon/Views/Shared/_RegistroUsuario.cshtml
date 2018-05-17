@@ -78,14 +78,12 @@
         return true;
     }
     function registrarNuevoUsuario() {
-        debugger;
         if (!SiValidaCampos()) {
             Swal({
                 text: "Todos los campos son obligatorios.",
                 type: "error",
                 showCancelButton: false,
-                confirmButtonText: 'Aceptar',
-                closeOnConfirm: true
+                confirmButtonText: 'Aceptar'
             })
         }
         else if (!SiValidaFecha($("#fechaNacimiento").val())) {
@@ -118,8 +116,13 @@
                 email: $("#emailNuevoUsuario").val(),
                 password: $("#passwordNuevoUsuario").val(),
                 confirmarPassword: $("#confirmarPassword").val(),
-            },
-            success: function (data) {
+                },
+                beforeSend: function (xhr) {
+                    Loading();
+                },
+                success: function (data) {
+                    //$("#modalRegistro").modal("hide");
+                    $("#body").loadingModal("hide");
                 if (data.mensaje == "") {
                     Swal({
                         text: "El registro ha sido exitoso.",
@@ -130,7 +133,8 @@
                     },
                         function(isConfirm) {
                             if (isConfirm) {
-                                window.location = '@Url.Action("Index","Home")';
+                                debugger;
+                                window.location = '@Url.Action("LoginRegistro","Home")'+"?email=" + $("#emailNuevoUsuario").val() + "&password=" + $("#passwordNuevoUsuario").val();
                             }
                         }
                     );

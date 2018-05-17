@@ -1,35 +1,41 @@
 ﻿@using UnAventon.Models
 @{
+    /**/
+
     ViewBag.Title = "_ListadoAutos";
 }
 
 <div class="row" style="margin-left:2em">
     <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:Left" onclick="nuevoAuto()">Nuevo Auto</button>
 </div>
-<div class="row" style="margin-left:2em">
+<div class="row" style="display:flex">
     @if (Model.Autos != null && Model.Autos.Count > 0)
     {
-        <table id="tablaAutos">
-            <thead>
-                <tr>
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Patente</th>
-                    <th>Asientos</th>
-                    <th> </th>
-                </tr>
-            </thead>
-            @foreach (Autos auto in Model.Autos)
-            {
-                <tr>
-                    <td>@auto.Marca</td>
-                    <td>@auto.Modelo</td>
-                    <td>@auto.Patente</td>
-                    <td>@auto.Asientos</td>
-                    <td class="glyphicon glyphicon-remove"> </td>
-                </tr>
-            }
-        </table>
+        <div class="table" style="margin-left:2em; margin-right:2em">
+            <table id="tablaAutos" width="100%">
+                <thead>
+                    <tr>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Patente</th>
+                        <th>Asientos</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Autos auto in Model.Autos)
+                    {
+                        <tr>
+                            <td>@auto.Marca</td>
+                            <td>@auto.Modelo</td>
+                            <td>@auto.Patente</td>
+                            <td>@auto.Asientos</td>
+                            <td><span class="glyphicon glyphicon-edit" onclick="editarAuto('@auto.Marca', '@auto.Modelo', '@auto.Patente', '@auto.Asientos')"></span> || <span class="glyphicon glyphicon-remove-circle"></span> </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
     else
     {
