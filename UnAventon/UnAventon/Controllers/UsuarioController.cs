@@ -84,4 +84,5 @@ namespace UnAventon.Controllers
                 return Json(new { mensaje = "Ha ocurrido un error al intentar borrar el nuevo auto." }, JsonRequestBehavior.AllowGet);
             }
         }
+    }
 }

@@ -2,14 +2,15 @@
 @{
     ViewBag.Title = "_ListadoAutos";
 }
+<link href="~/Content/dataTables.bootstrap4.css" rel="stylesheet" />
 
-<div class="row" style="margin-left:2em">
-    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:Left" onclick="nuevoAuto()">Nuevo Auto</button>
+<div class="row" style="margin-right:2em">
+    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="nuevoAuto()">Nuevo Auto</button>
 </div>
-<div class="row" style="margin-left:2em">
+<div class="dataTables_wrapper" style="margin-left:2em; margin-right:2em">
     @if (Model.Autos != null && Model.Autos.Count > 0)
     {
-        <table id="tablaAutos">
+        <table id="tablaAutos" class="table table-striped table-bordered dataTable no-footer" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>Marca</th>
@@ -19,16 +20,18 @@
                     <th> </th>
                 </tr>
             </thead>
-            @foreach (Autos auto in Model.Autos)
-            {
-                <tr>
-                    <td>@auto.Marca</td>
-                    <td>@auto.Modelo</td>
-                    <td>@auto.Patente</td>
-                    <td>@auto.Asientos</td>
-                    <td><a class="glyphicon glyphicon-edit" onclick="editarAuto('@auto.Marca', '@auto.Modelo', '@auto.Patente', '@auto.Asientos')"></a> || <a class="glyphicon glyphicon-remove-circle"onclick="borrarAuto('@auto.Id')"></a> </td>
-                </tr>
-            }
+            <tbody>
+                @foreach (Autos auto in Model.Autos)
+                {
+                    <tr>
+                        <td>@auto.Marca</td>
+                        <td>@auto.Modelo</td>
+                        <td>@auto.Patente</td>
+                        <td>@auto.Asientos</td>
+                        <td><span style="cursor:pointer" class="glyphicon glyphicon-edit" onclick="editarAuto('@auto.Marca', '@auto.Modelo', '@auto.Patente', '@auto.Asientos')"></span> || <span style="cursor:pointer" class="glyphicon glyphicon-remove-circle" onclick="borrarAuto('@auto.Id')"></span> </td>
+                    </tr>
+                }
+            </tbody>
         </table>
     }
     else

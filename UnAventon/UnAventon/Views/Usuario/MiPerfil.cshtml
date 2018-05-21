@@ -1,7 +1,8 @@
 ﻿@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/jquery-ui.js"></script>
     <script src="~/Scripts/datatables.js"></script>*@
-
+@*<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet"/>*@
 <link href="~/Content/jquery.loadingModal.css" rel="stylesheet" />
 <link href="~/Content/dataTables.bootstrap4.css" rel="stylesheet" />
 
@@ -188,19 +189,66 @@
             }
         });
         }
-    function borrarAuto()
+    function borrarAuto(id)
     {
-        $.ajax({
-            url: '@Url.Action("BorrarAuto","Usuario")',
-            data: {
-                id: $("#id").val(),
-            },
-            beforeSend: function (xhr) {
-                //Template de loading
-                Loading();
-            },
+        swal({
+            title: "",
+            text: "Desea eliminar el auto?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            closeOnConfirm: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                    url: '@Url.Action("BorrarAuto","Usuario")',
+                    data: {
+                        id: id,
+                    },
+                    beforeSend: function (xhr) {
+                        //Template de loading
+                        Loading();
+                    },
+                    success: function (data) {
+                        if (data.mensaje == ""){
+                            $("body").loadingModal('hide');
+                            swal({
+                                title: "",
+                                text: "El auto ha sido eliminado.",
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Aceptar',
+                                closeOnConfirm: false
+                            },
+                                function (isConfirm) {
+                                    if (isConfirm) {
+                                        window.location.reload();
+                                    }
+                                }
+                            )
+                        }
+                        else {
+                            $("#modalAuto").modal("hide");
+                            $("body").loadingModal('hide');
+                            $("#email").val("");
+                            $("#password").val("");
+                            swal({
+                                title: "",
+                                text: data.mensaje,
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Aceptar',
+                                closeOnConfirm: true
+                            })
+                        }
 
-         });
+                    }
+                    });
+                }
+            }
+        );
+
     }
     </script>
 }
