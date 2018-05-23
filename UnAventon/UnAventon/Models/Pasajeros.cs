@@ -11,6 +11,7 @@ namespace UnAventon.Models
         public virtual long Id { get; set; }
         public virtual string Estado { get; set; }
         public virtual string Calificacion { get; set; }
+        public virtual Viajes Viaje { get; set; }
     }
 }
 

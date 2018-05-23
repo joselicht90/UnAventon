@@ -175,19 +175,20 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
+    <Compile Include="Controllers\ViajeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Autos.cs" />
     <Compile Include="Models\AutosMap.cs" />
-    <Compile Include="Models\Ciudades.cs" />
-    <Compile Include="Models\CiudadesMap.cs" />
+    <Compile Include="Models\Localidades.cs" />
+    <Compile Include="Models\LocalidadesMap.cs" />
     <Compile Include="Models\Comentarios.cs" />
     <Compile Include="Models\ComentariosMap.cs" />
     <Compile Include="Models\Pasajeros.cs" />
     <Compile Include="Models\PasajerosMap.cs" />
-    <Compile Include="Models\Provincias.cs" />
-    <Compile Include="Models\ProvinciasMap.cs" />
+    <Compile Include="Models\Partido.cs" />
+    <Compile Include="Models\PartidoMap.cs" />
     <Compile Include="Models\RespuestasComentarios.cs" />
     <Compile Include="Models\RespuestasComentariosMap.cs" />
     <Compile Include="Models\Usuarios.cs" />
@@ -254,6 +255,7 @@
     <Content Include="Views\Usuario\_ListadoAutos.cshtml" />
     <Content Include="Views\Usuario\_NuevoAuto.cshtml" />
     <Content Include="Views\Usuario\_EditarAuto.cshtml" />
+    <Content Include="Views\Viaje\NuevoViaje.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

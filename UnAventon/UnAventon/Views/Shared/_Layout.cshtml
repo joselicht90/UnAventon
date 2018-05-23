@@ -23,7 +23,7 @@
                     <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" href="#">Buscar Viajes</button>
                 </li>
                 <li>
-                    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" href="">Crear Viaje</button>
+                    <button type="button" class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" onclick="GoToNuevoViaje()" href="">Crear Viaje</button>
                 </li>
                 <li>
                     <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" href="#">Quienes Somos?</button>
@@ -259,6 +259,10 @@
              }
             });
         }
+    }
+    function GoToNuevoViaje() {
+        Loading();
+        window.location.href = '@Url.Action("NuevoViaje","Viaje")'
     }
 
 </script>

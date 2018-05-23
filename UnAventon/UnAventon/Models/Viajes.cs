@@ -16,5 +16,10 @@ namespace UnAventon.Models
         public virtual long NViaje { get; set; }
         public virtual long Periodico  { get; set; }
         public virtual long CalificacionConductor { get; set; }
+        public virtual Autos Auto { get; set; }
+        public virtual Localidades Destino { get; set; }
+        public virtual Localidades Origen { get; set; }
+        public virtual Usuarios Conductor { get; set; }
+        public virtual IList<Pasajeros> Pasajeros { get; set; }
     }
 }

@@ -5,13 +5,16 @@ using System.Web;
 
 namespace UnAventon.Models
 {
-    public class Provincias
+    public class Localidades
     {
-        public Provincias() { }
+        public Localidades() { }
         public virtual long Id { get; set; }
         public virtual string Nombre { get; set; }
+        public virtual Partido Partido { get; set; }
     }
 }
+
+
 
 
 

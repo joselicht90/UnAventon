@@ -6,13 +6,13 @@ using System.Web;
 
 namespace UnAventon.Models
 {
-    public class ProvinciasMap : ClassMap<Provincias>
+    public class PartidoMap : ClassMap<Partido>
     {
-        public ProvinciasMap()
+        public PartidoMap()
         {
-            Table("UA_PROVINCIAS");
+            Table("Departamento");
             Id(x => x.Id, "ID").GeneratedBy.Native();
-            Map(x => x.Nombre, "NOMBRE").Not.Nullable();
+            Map(x => x.Nombre, "Nombre").Not.Nullable();
 
         }
     }

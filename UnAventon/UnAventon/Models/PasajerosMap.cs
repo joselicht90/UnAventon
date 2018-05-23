@@ -14,6 +14,7 @@ namespace UnAventon.Models
             Id(x => x.Id, "ID").GeneratedBy.Native();
             Map(x => x.Estado, "ESTADO").Not.Nullable();
             Map(x => x.Calificacion, "CALIFICACION").Not.Nullable();
+            References(x => x.Viaje).Column("VIAJES_ID");
 
         }
     }

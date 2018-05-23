@@ -5,16 +5,13 @@ using System.Web;
 
 namespace UnAventon.Models
 {
-    public class Ciudades
+    public class Partido
     {
-        public Ciudades() { }
+        public Partido() { }
         public virtual long Id { get; set; }
         public virtual string Nombre { get; set; }
-        public virtual long Cp { get; set; }
     }
 }
-
-
 
 
 
