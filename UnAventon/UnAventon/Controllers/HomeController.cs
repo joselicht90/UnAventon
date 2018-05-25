@@ -14,6 +14,27 @@ namespace UnAventon.Controllers
     {
         public ActionResult Index()
         {
+
+            ISession session = NHibernateHelper.GetCurrentSession();
+            if(Session["Localidades"] == null)
+            {
+                IList<Localidades> localidades = session.QueryOver<Localidades>().Where(x => x.Partido.Id == 9).List();
+                Session["Localidades"] = localidades;
+            }
+            if (Session["UsuarioLogueado"] != null)
+            {
+                if (Session["Autos"] == null )
+                {
+                    long idUsuario = ((Usuarios)Session["UsuarioLogueado"]).Id;
+                    IList<Autos> autos = session.QueryOver<Autos>().Where(x => x.UsuarioId == idUsuario).List();
+                    Session["Autos"] = (autos != null) ? autos : new List<Autos>();
+                }
+                
+            }
+            else
+            {
+                Session["Autos"] = new List<Autos>();
+            }
             return View();
         }
 
@@ -22,7 +43,7 @@ namespace UnAventon.Controllers
             Session["UsuarioLogueado"] = null;
             return RedirectToAction("Index");
         }
-        
+
         public ActionResult LoginRegistro(string email, string password)
         {
             ISession session = NHibernateHelper.GetCurrentSession();
@@ -39,7 +60,7 @@ namespace UnAventon.Controllers
         }
         public JsonResult Login(string email, string password)
         {
-            
+
             try
             {
                 ISession session = NHibernateHelper.GetCurrentSession();
@@ -49,10 +70,12 @@ namespace UnAventon.Controllers
                     searchUsuario.Add(Expression.Eq("Email", email));
                     searchUsuario.Add(Expression.Eq("Password", password));
                     Usuarios usuario = searchUsuario.UniqueResult<Usuarios>();
-                    if(usuario != null)
+                    if (usuario != null)
                     {
                         Session["UsuarioLogueado"] = usuario;
                         Session["UsuarioLogueadoNombre"] = usuario.Nombre;
+                        IList<Autos> autos = session.QueryOver<Autos>().Where(x => x.UsuarioId == usuario.Id).List();
+                        Session["Autos"] = autos;
                         return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
                     }
                     else
@@ -61,13 +84,13 @@ namespace UnAventon.Controllers
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return Json(new { mensaje = "Ha ocurrido un error al intentar iniciar sesion." }, JsonRequestBehavior.AllowGet);
             }
         }
 
-        public JsonResult RegistrarUsuario(string nombre, string apellido, string fechaNacimiento, string email ,string password, string confirmarPassword)
+        public JsonResult RegistrarUsuario(string nombre, string apellido, string fechaNacimiento, string email, string password, string confirmarPassword)
         {
             try
             {
@@ -77,7 +100,7 @@ namespace UnAventon.Controllers
                     ICriteria searchUsuario = session.CreateCriteria<Usuarios>();
                     searchUsuario.Add(Expression.Eq("Email", email));
                     Usuarios usuarioRegistrado = searchUsuario.UniqueResult<Usuarios>();
-                    if(usuarioRegistrado == null)
+                    if (usuarioRegistrado == null)
                     {
                         usuarioRegistrado = new Usuarios();
                         usuarioRegistrado.Nombre = nombre;
@@ -117,13 +140,13 @@ namespace UnAventon.Controllers
 
             return View();
         }
-        
+
         public ActionResult GuardarViaje()
         {
             ISession session = NHibernateHelper.GetCurrentSession();
             try
             {
-                using(ITransaction transaction = session.BeginTransaction())
+                using (ITransaction transaction = session.BeginTransaction())
                 {
                     Viajes viaje = new Viajes();
                     viaje.FechaAlta = DateTime.Now.Date;
@@ -135,7 +158,7 @@ namespace UnAventon.Controllers
                     transaction.Commit();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e;
             }

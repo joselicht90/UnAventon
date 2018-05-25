@@ -33,8 +33,12 @@ namespace UnAventon.Controllers
                     auto.Patente = patente;
                     session.Update(auto);
                     transaction.Commit();
+                    long idUsuario = ((Usuarios)Session["UsuarioLogueado"]).Id;
+                    IList<Autos> autos = session.QueryOver<Autos>().Where(x => x.UsuarioId == idUsuario).List();
+                    Session["Autos"] = (autos != null) ? autos : new List<Autos>();
                     return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
                 }
+
             }
             catch (Exception e)
             {
@@ -58,6 +62,8 @@ namespace UnAventon.Controllers
                     usuarioLogueado.Autos.Add(auto);
                     session.Update(usuarioLogueado);
                     transaction.Commit();
+                    IList<Autos> autos = session.QueryOver<Autos>().Where(x => x.UsuarioId == long.Parse(idUsuario)).List();
+                    Session["Autos"] = (autos != null) ? autos : new List<Autos>();
                     return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
                 }
             }
@@ -66,6 +72,8 @@ namespace UnAventon.Controllers
                 return Json(new { mensaje = "Ha ocurrido un error al intentar guardar el nuevo auto." }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        
         public JsonResult BorrarAuto(string id)
         {
             try
@@ -76,6 +84,9 @@ namespace UnAventon.Controllers
                     Autos auto = session.QueryOver<Autos>().Where(x => x.Id == long.Parse(id)).SingleOrDefault();
                     session.Delete(auto);
                     transaction.Commit();
+                    long idUsuario = ((Usuarios)Session["UsuarioLogueado"]).Id;
+                    IList<Autos> autos = session.QueryOver<Autos>().Where(x => x.UsuarioId == idUsuario).List();
+                    Session["Autos"] = (autos != null) ? autos : new List<Autos>();
                     return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
                 }
             }

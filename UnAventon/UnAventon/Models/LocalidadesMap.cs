@@ -13,7 +13,7 @@ namespace UnAventon.Models
             Table("Localidad");
             Id(x => x.Id, "ID").GeneratedBy.Native();
             Map(x => x.Nombre, "Nombre").Not.Nullable();
-            References(x => x.Partido).Column("idDepartamento").Cascade.All();
+            References(x => x.Partido).Column("idDepartamento").Cascade.None();
         }
            
     }

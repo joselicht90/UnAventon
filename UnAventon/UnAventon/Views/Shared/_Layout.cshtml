@@ -1,5 +1,6 @@
 ﻿<link href="~/Content/sweetalert.css" rel="stylesheet" />
 <link href="~/Content/jquery.loadingModal.css" rel="stylesheet" />
+<link href="~/Content/datetimepicker/datetimepicker.css" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!DOCTYPE html>
 <html>
@@ -92,14 +93,34 @@
 
 </body>
 </html>
+@Html.Partial("_RegistroUsuario")
+@Html.Partial("_NuevoViaje")
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/bootstrap")
 @RenderSection("Scripts", required: false)
-@Html.Partial("_RegistroUsuario")
+
+
 <script src="~/Scripts/swal.js"></script>
 <script src="~/Scripts/jquery.loadingModal.js"></script>
+<script src="~/Content/select2/select2.js"></script>
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/datetimepicker/datetimepicker.js"></script>
+
 <script>
     $(document).ready(function () {
+        $('#fechaDeViaje').datetimepicker();
+        $("#autos").select2({
+            width: 'resolve'
+        });
+        $("#origen").select2({
+            width: 'resolve'
+        });
+        $("#destino").select2({
+            width: 'resolve'
+        });
+        $("#tipoDeViaje").select2({
+            width: 'resolve'
+        });
         //Deshabilita el boton si no los capos no estan escritos
         $('#loginBtn').attr('disabled', true);
         $('#password').keyup(function () {
@@ -261,8 +282,70 @@
         }
     }
     function GoToNuevoViaje() {
-        Loading();
-        window.location.href = '@Url.Action("NuevoViaje","Viaje")'
+        if ('@Session["UsuarioLogueado"]' != ''){
+            $("#nuevoViaje").modal();
+        }
+        else {
+            swal({
+                title: "",
+                text: "Debes ser un usuario logueado para acceder a esta opcion.",
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonText: 'Aceptar',
+                closeOnConfirm: true
+            })
+
+        }
+
     }
+
+    function guardarViaje() {
+             $.ajax({
+                url: '@Url.Action("GuardarViaje","Viaje")',
+                data: {
+                    tipo: $("#tipoDeViaje").val(),
+                    origen: $("#origen").val(),
+                    destino: $("#destino").val(),
+                    auto: $("#autos").val(),
+                    duracion: $("#duracion").val(),
+                    costo: $("#costo").val()
+                },
+                beforeSend: function (xhr) {
+                    //Template de loading
+                    Loading();
+                },
+                success: function (data) {
+                    $("body").loadingModal('hide');
+                    if (data.mensaje == "") {
+                        swal({
+                            title: "",
+                            text: "El viaje ha sido guardado con exito.",
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Aceptar',
+                            closeOnConfirm: false
+                        },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.reload();
+                                }
+                            }
+                        )
+                    }
+                    else {
+                        swal({
+                            title: "",
+                            text: data.mensaje,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Aceptar',
+                            closeOnConfirm: true
+                        })
+                    }
+
+                }
+            });
+
+        }
 
 </script>
