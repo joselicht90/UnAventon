@@ -7,7 +7,9 @@ namespace UnAventon.Models
 {
     public class Viajes
     {
-        public Viajes() { }
+        public Viajes() {
+            Pasajeros = new List<Pasajeros>();
+        }
         public virtual long Id { get; set; }
         public virtual decimal Precio { get; set; }
         public virtual DateTime FechaViaje { get; set; }

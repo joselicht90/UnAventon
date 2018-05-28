@@ -55,6 +55,7 @@ namespace UnAventon.Controllers
             {
                 Session["UsuarioLogueado"] = usuario;
                 Session["UsuarioLogueadoNombre"] = usuario.Nombre;
+                Session["UsuarioLogueadoId"] = usuario.Id;
             }
             return RedirectToAction("Index");
         }

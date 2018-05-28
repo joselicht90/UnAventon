@@ -119,7 +119,12 @@
             width: 'resolve'
         });
         $("#tipoDeViaje").select2({
-            width: 'resolve'
+            width: 'resolve',
+            minimumResultsForSearch: -1
+        });
+        $("#duracionPeriodico").select2({
+            width: 'resolve',
+            minimumResultsForSearch: -1
         });
         //Deshabilita el boton si no los capos no estan escritos
         $('#loginBtn').attr('disabled', true);
@@ -346,6 +351,15 @@
                 }
             });
 
+    }
+
+    $("#tipoDeViaje").on("change", function () {
+        if ($("#tipoDeViaje").val() == '0') {
+            $("#formDuracionPeriodico").show();
         }
+        else {
+            $("#formDuracionPeriodico").hide();
+        }
+    });
 
 </script>
