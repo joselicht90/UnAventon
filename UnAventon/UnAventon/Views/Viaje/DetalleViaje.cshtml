@@ -1,6 +1,7 @@
 ﻿@using UnAventon.Models
 @model UnAventon.Models.Viajes
-<link href="~/Content/select2.css" rel="stylesheet" />
+@*<link href="~/Content/select2.css" rel="stylesheet" />*@
+<link href="~/Content/datetimepicker/datetimepicker.css" rel="stylesheet" />
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "NuevoViaje";
@@ -22,12 +23,12 @@
 <div class="row">
     @if (ViewBag.ConductorDelViaje != null)
     {
-        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="">Modificar Viaje</button>
+        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="GoToEditarViaje()">Modificar Viaje</button>
         <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="EliminarViaje()">Eliminar Viaje</button>
     }
     else
     {
-        if (!(Model.Pasajeros.Where(x => x.Estado.Equals("Aceptado")).Count() == Model.Auto.Asientos))
+            if (!(Model.Pasajeros.Where(x => x.Estado.Equals("Aceptado")).Count() == Model.Auto.Asientos))
         {
             if (ViewBag.Postular != null)
             {
@@ -64,6 +65,12 @@
                     </div>
                     <div class="form-group col-lg-12">
                         <div class="input-group" style="display:inline-flex">
+                            <label class="cols-lg-12 control-label" style="margin-right:2em;background: lightgray;font-size: x-large;padding-left: 0.5em;padding-right: 0.5em">Precio: </label>
+                            <label class="cols-lg-12" style="font-size: x-large">$@Model.Precio</label>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <div class="input-group" style="display:inline-flex">
                             <label class="cols-lg-12 control-label" style="margin-right:2em;background: lightgray;font-size: x-large;padding-left: 0.5em;padding-right: 0.5em">Fecha de Viaje: </label>
                             <label class="cols-lg-12" style="font-size: x-large">@string.Format("{0: dd/MM/yyyy HH:mm}", Model.FechaViaje)</label>
                         </div>
@@ -78,6 +85,12 @@
                         <div class="input-group" style="display:inline-flex">
                             <label class="cols-lg-12 control-label" style="margin-right:2em;background: lightgray;font-size: x-large;padding-left: 0.5em;padding-right: 0.5em">Auto: </label>
                             <label class="cols-lg-12" style="font-size: x-large">@Model.Auto.Marca - @Model.Auto.Modelo - @Model.Auto.Patente</label>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <div class="input-group" style="display:inline-flex">
+                            <label class="cols-lg-12 control-label" style="margin-right:2em;background: lightgray;font-size: x-large;padding-left: 0.5em;padding-right: 0.5em">Asientos: </label>
+                            <label class="cols-lg-12" style="font-size: x-large">@Model.Auto.Asientos</label>
                         </div>
                     </div>
                     <div class="form-group col-lg-12">
@@ -125,8 +138,36 @@
         </div>
     </div>
 </div>
+@Html.Partial("_EditarViaje")
 @section Scripts{
+    <script src="~/Content/select2/select2.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Content/datetimepicker/datetimepicker.js"></script>
     <script>
+
+        $(document).ready(function () {
+            $("#autosEditar").select2({
+                width: 'resolve'
+            });
+            $("#origenEditar").select2({
+                width: 'resolve'
+            });
+            $("#destinoEditar").select2({
+                width: 'resolve'
+            });
+            $('#fechaDeViajeEditar').datetimepicker({
+
+
+            });
+            $("#tipoDeViajeEditar").select2({
+                width: 'resolve',
+                minimumResultsForSearch: -1
+            });
+            $("#duracionPeriodicoEditar").select2({
+                width: 'resolve',
+                minimumResultsForSearch: -1
+            });
+        })
     function EliminarViaje() {
         swal({
             title: "",
@@ -149,7 +190,21 @@
                         success: function (data) {
                             $("body").loadingModal("hide");
                             if (data.mensaje == "") {
-                                window.location.reload();
+                                swal({
+                                    title: "",
+                                    text: "El viaje ha sido eliminado con exito.",
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Aceptar',
+                                    closeOnConfirm: false
+                                },
+                                    function (isConfirm) {
+                                        if (isConfirm) {
+                                            window.location.href='@Url.Action("Index","Home")';
+                                        }
+                                    }
+                                )
+
                             }
                             else {
                                 swal({
@@ -374,5 +429,28 @@
             }
         )
         };
+        function GoToEditarViaje() {
+            $("#editarViaje").modal();
+            $("#autosEditar").val(@Model.Auto.Id);
+            $("#autosEditar").trigger('change');
+            $("#destinoEditar").val(@Model.Destino.Id);
+            $("#destinoEditar").trigger('change');
+            $("#origenEditar").val(@Model.Origen.Id);
+            $("#origenEditar").trigger('change');
+            $("#costoEditar").val(@Model.Precio);
+            $("#tipoViajeEditar").val(@Model.Periodico);
+            $("#duracionEditar").val(@Model.Duracion);
+            $('#fechaDeViajeEditar').data('DateTimePicker').date("01/01/2018 12:34");
+            $('#fechaDeViajeEditar').trigger('change');
+            @*$("#textViajeEditarFecha").val(@Model.FechaViaje.ToShortDateString());*@
+        }
+        $("#tipoDeViajeEditar").on("change", function () {
+            if ($("#tipoDeViajeEditar").val() == '0') {
+                $("#formDuracionPeriodicoEditar").show();
+            }
+            else {
+                $("#formDuracionPeriodicoEditar").hide();
+            }
+        });
     </script>
 }

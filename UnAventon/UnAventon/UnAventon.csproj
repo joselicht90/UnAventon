@@ -384,6 +384,7 @@
     <Content Include="Views\Usuario\_EditarAuto.cshtml" />
     <Content Include="Views\Viaje\DetalleViaje.cshtml" />
     <Content Include="Views\Shared\_NuevoViaje.cshtml" />
+    <Content Include="Views\Viaje\_EditarViaje.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

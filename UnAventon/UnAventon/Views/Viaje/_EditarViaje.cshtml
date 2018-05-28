@@ -1,0 +1,87 @@
+﻿@using UnAventon.Models
+
+<!-- Modal -->
+<div class="modal fade" id="editarViaje" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="main-login main-center">
+            <div class="form-group">
+                <label class="cols-lg-12 control-label" style="margin-right:2em">Auto</label>
+                <span class="select2-container" style="margin-right:2em">
+                    <select id="autosEditar" class="col-lg-12 select2-selection--single" dir="rtl" tabindex="-1" aria-hidden="true" style="width:100%;margin-right:2em">
+                        @foreach (Autos auto in (IList<Autos>)Session["Autos"])
+                        {
+
+                            <option value="@auto.Id"> @auto.Marca - @auto.Modelo - @auto.Patente</option>
+
+
+                        }
+                    </select>
+                </span>
+            </div>
+            <div class="form-group">
+                <label for="email" class="cols-lg-12 control-label" style="margin-right:2em">Origen</label>
+                <span class="select2-container" style="margin-right:2em">
+                    <select id="origenEditar" class="col-lg-12 select2-selection--single" dir="rtl" tabindex="-1" aria-hidden="true" style="width:100%; margin-right:2em">
+                        @foreach (Localidades localidadOrigen in (IList<Localidades>)Session["Localidades"])
+                        {
+                            <option value="@localidadOrigen.Id"> @localidadOrigen.Partido.Nombre - @localidadOrigen.Nombre</option>
+                        }
+                    </select>
+                </span>
+            </div>
+            <div class="form-group">
+                <label for="email" class="cols-lg-12 control-label" style="margin-right:2em">Destino</label>
+                <span class="select2-container" style="margin-right:2em">
+                    <select id="destinoEditar" class="col-lg-12 select2-selection--single" dir="rtl" tabindex="-1" aria-hidden="true" style="width:100%;margin-right:2em">
+                        @foreach (Localidades localidadOrigen in (IList<Localidades>)Session["Localidades"])
+                        {
+                            <option value="@localidadOrigen.Id"> @localidadOrigen.Partido.Nombre - @localidadOrigen.Nombre</option>
+                        }
+                    </select>
+                </span>
+            </div>
+            <div class="form-group">
+                <label style="margin-right:2em">Costo</label>
+                <div class="cols-sm-10">
+                    <input type="text" class="form-control" id="costoEditar" placeholder="$" style="margin-right:2em">
+                </div>
+            </div>
+            <div class="form-group">
+                <label style="margin-right:2em">Duracion</label>
+                <div class="cols-sm-10">
+                    <input type="text" class="form-control" id="duracionEditar" placeholder=".min aprox" style="margin-right:2em">
+                </div>
+            </div>
+            <div class="form-group">
+                <label style="margin-right:2em">Fecha del Viaje</label>
+                <div class="input-append date form_datetime" id="fechaDeViajeEditar">
+                    <input type="text" id="textViajeEditarFecha" class="form-control" style="margin-right:2em">
+                    <span class="add-on"><i class="icon-th"></i></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="cols-lg-12 control-label" style="margin-right:2em">Tipo De Viaje</label>
+                <span class="select2-container" style="margin-right:2em">
+                    <select id="tipoDeViajeEditar" class="col-lg-12 select2-selection--single" dir="rtl" tabindex="-1" aria-hidden="true" style="width:100%;margin-right:2em">
+                        <option value="1">No Periodico</option>
+                        <option value="0">Periodico</option>
+                    </select>
+                </span>
+            </div>
+            <div class="form-group" id="formDuracionPeriodicoEditar" hidden>
+                <label class="cols-lg-12 control-label" style="margin-right:2em">Tipo De Viaje</label>
+                <span class="select2-container" style="margin-right:2em">
+                    <select id="duracionPeriodicoEditar" class="col-lg-12 select2-selection--single" style="width:100%;margin-right:2em">
+                        <option value="0">1 semana</option>
+                        <option value="1">2 semanas</option>
+                        <option value="2">3 semanas</option>
+                        <option value="3">4 semanas</option>
+                    </select>
+                </span>
+            </div>
+            <div class="form-group ">
+                <button type="button" onclick="guardarViajeEditado()" class="btn btn-primary btn-lg btn-block login-button">GuardarViaje</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -126,6 +126,12 @@
             width: 'resolve',
             minimumResultsForSearch: -1
         });
+        if ($("#tipoDeViaje").val() == '1' || $("#tipoDeViaje").val() == '2') {
+            $("#formDuracionPeriodico").show();
+        }
+        else {
+            $("#formDuracionPeriodico").hide();
+        }
         //Deshabilita el boton si no los capos no estan escritos
         $('#loginBtn').attr('disabled', true);
         $('#password').keyup(function () {
@@ -305,6 +311,17 @@
     }
 
     function guardarViaje() {
+        if ($("#autos").val() == "") {
+            
+            swal({
+                title: "",
+                text: "Debe seleccionar un auto para el viaje.",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Aceptar',
+                closeOnConfirm: false
+            })
+        }
              $.ajax({
                 url: '@Url.Action("GuardarViaje","Viaje")',
                 data: {
@@ -313,7 +330,9 @@
                     destino: $("#destino").val(),
                     auto: $("#autos").val(),
                     duracion: $("#duracion").val(),
-                    costo: $("#costo").val()
+                    costo: $("#costo").val(),
+                    fechaViaje: $("#textFechaViaje").val(),
+                    cantidadSemanas: $("#duracionPeriodico").val()
                 },
                 beforeSend: function (xhr) {
                     //Template de loading
@@ -354,12 +373,13 @@
     }
 
     $("#tipoDeViaje").on("change", function () {
-        if ($("#tipoDeViaje").val() == '0') {
+        if ($("#tipoDeViaje").val() == '1' || $("#tipoDeViaje").val() == '2') {
             $("#formDuracionPeriodico").show();
         }
         else {
             $("#formDuracionPeriodico").hide();
         }
     });
+
 
 </script>
