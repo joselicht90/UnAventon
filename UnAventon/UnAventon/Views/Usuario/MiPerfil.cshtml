@@ -91,7 +91,7 @@
                     confirmButtonText: 'Aceptar'
                 })
             }
-            else if (!SiValidaCamposEditar()) {
+            else{
                 $.ajax({
                     url: '@Url.Action("EditarAuto","Usuario")',
                     data: {
@@ -144,34 +144,31 @@
                     }
                 });
             }
-            else {
-                swal({
-                    title: "",
-                    text: "Todos los campos son obligatorios.",
-                    type: "error",
-                    showCancelButton: false,
-                    confirmButtonText: 'Aceptar'
-                })
-            }
 
         }
 
         function SiValidaAsientos(asientos) {
-            var regex = /^\d+$/;
+            var regex = /^[+]?\d+([.]\d+)?$/;
             return regex.test(asientos);
         }
 
         function SiValidaCampos() {
+            debugger;
             if ($("#marca").val() == "" || $("#modelo").val() == "" || $("#patente").val() == "" || $("#asientos").val() == "") {
                 return false;
             }
-            return true;
+            else {
+                return true;
+            }
         }
         function SiValidaCamposEditar() {
             if ($("#marcaEditar").val() == "" || $("#modeloEditar").val() == "" || $("#patenteEditar").val() == "" || $("#asientosEditar").val() == "") {
                 return false;
             }
-            return true;
+            else {
+                return true;
+            }
+            
         }
         function guardarAuto() {
             if (!SiValidaAsientos($("#asientos").val())) {
@@ -183,10 +180,10 @@
                     confirmButtonText: 'Aceptar'
                 })
             }
-            else if (!SiValidaCampos()) {
+            else{
                 $.ajax({
-            url: '@Url.Action("GuardarAuto","Usuario")',
-            data: {
+                url: '@Url.Action("GuardarAuto","Usuario")',
+                data: {
                 marca: $("#marca").val(),
                 modelo: $("#modelo").val(),
                 patente: $("#patente").val(),
@@ -237,15 +234,6 @@
 
             }
             });
-            }
-            else {
-                swal({
-                    title: "",
-                    text: "Todos los campos son obligatorios.",
-                    type: "error",
-                    showCancelButton: false,
-                    confirmButtonText: 'Aceptar'
-                })
             }
 
         }

@@ -108,23 +108,31 @@
 
 <script>
     $(document).ready(function () {
-        $('#fechaDeViaje').datetimepicker();
+        $('#fechaDeViaje').datetimepicker({
+            minDate: 0
+        });
         $("#autos").select2({
-            width: 'resolve'
+            width: 'resolve',
+            dropdownParent: $("#nuevoViaje"),
+            minimumResultsForSearch: -1
         });
         $("#origen").select2({
-            width: 'resolve'
+            width: 'resolve',
+            dropdownParent: $("#nuevoViaje")
         });
         $("#destino").select2({
-            width: 'resolve'
+            width: 'resolve',
+            dropdownParent: $("#nuevoViaje")
         });
         $("#tipoDeViaje").select2({
             width: 'resolve',
-            minimumResultsForSearch: -1
+            minimumResultsForSearch: -1,
+            dropdownParent: $("#nuevoViaje")
         });
         $("#duracionPeriodico").select2({
             width: 'resolve',
-            minimumResultsForSearch: -1
+            minimumResultsForSearch: -1,
+            dropdownParent: $("#nuevoViaje")
         });
         if ($("#tipoDeViaje").val() == '1' || $("#tipoDeViaje").val() == '2') {
             $("#formDuracionPeriodico").show();
@@ -324,6 +332,14 @@
         }
 
     }
+    function SiSoloMoneda(campo) {
+        var regex = /^\$?\-?([1-9]{1}[0-9]{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))$|^\-?\$?([1-9]{1}\d{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))$|^\(\$?([1-9]{1}\d{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))\)$/;
+        return regex.test(campo);
+    }
+    function SiSoloNumeros(campo) {
+        var regex = /^[+]?\d+([.]\d+)?$/;
+        return regex.test(campo);
+    }
     function SiValidaCamposViaje() {
         if ($("#autos").val() == "" || $("#tipoDeViaje").val() == "" || $("#origen").val() == "" || $("#destino").val() == "" || $("#duracion").val() == "" || $("#textFechaViaje").val() == "" || $("#duracionPeriodico").val() == "" ) {
             return false;
@@ -337,6 +353,26 @@
             swal({
                 title: "",
                 text: "Todos los campos son obligatorios.",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Aceptar',
+                closeOnConfirm: false
+            })
+        }
+        else if (!SiSoloNumeros($("#duracion").val())) {
+            swal({
+                title: "",
+                text: "La duración debe ser expresada en minutos.",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Aceptar',
+                closeOnConfirm: false
+            })
+        }
+        else if (!SiSoloMoneda($("#costo").val())) {
+            swal({
+                title: "",
+                text: "Solo se permiten digitos en el costo.",
                 type: 'error',
                 showCancelButton: false,
                 confirmButtonText: 'Aceptar',

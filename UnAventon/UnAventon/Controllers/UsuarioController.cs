@@ -23,7 +23,17 @@ namespace UnAventon.Controllers
         {
             try
             {
+                if(string.IsNullOrEmpty(marca) || string.IsNullOrEmpty(modelo) || string.IsNullOrEmpty(asientos) || string.IsNullOrEmpty(idAuto))
+                {
+                    return Json(new { mensaje = "Todos los campos son obligatorios." }, JsonRequestBehavior.AllowGet);
+                }
                 ISession session = NHibernateHelper.GetCurrentSession();
+                List<Viajes> viajesDelAuto = session.QueryOver<Viajes>().Where(x => x.Auto.Id == long.Parse(idAuto)).List().ToList();
+                if(viajesDelAuto.Any(x=>x.FechaBaja != null))
+                {
+                    return Json(new { mensaje = "El auto se encuentra en un viaje activo y no puede ser modificado." }, JsonRequestBehavior.AllowGet);
+
+                }
                 using (ITransaction transaction = session.BeginTransaction())
                 {
                     Autos auto = session.Get<Autos>(long.Parse(idAuto));
@@ -49,6 +59,10 @@ namespace UnAventon.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(marca) || string.IsNullOrEmpty(modelo) || string.IsNullOrEmpty(asientos))
+                {
+                    return Json(new { mensaje = "Todos los campos son obligatorios." }, JsonRequestBehavior.AllowGet);
+                }
                 ISession session = NHibernateHelper.GetCurrentSession();
                 using (ITransaction transaction = session.BeginTransaction())
                 {

@@ -211,6 +211,16 @@ namespace UnAventon.Controllers
             Usuarios usuarioLogueado = (Usuarios)Session["UsuarioLogueado"];
             try
             {
+                if (auto.Equals(""))
+                {
+                    return Json(new { mensaje = "El viaje debe contas con un auto seleccionado." }, JsonRequestBehavior.AllowGet);
+
+                }
+                if (DateTime.Parse(fechaViaje) < DateTime.Today)
+                {
+                    return Json(new { mensaje = "El viaje no puede ser programado para una fecha anterior al dia de hoy." }, JsonRequestBehavior.AllowGet);
+
+                }
                 ISession session = NHibernateHelper.GetCurrentSession();
                 using (ITransaction transaction = session.BeginTransaction())
                 {
