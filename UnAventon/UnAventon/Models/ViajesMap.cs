@@ -19,8 +19,8 @@ namespace UnAventon.Models
             Map(x => x.NViaje, "N_VIAJE").Nullable();
             Map(x => x.Periodico, "PERIODICO").Not.Nullable();
             Map(x => x.Duracion, "DURACION_VIAJE");
-            Map(x => x.CantidadSemana, "CANTIDAD_SEMANAS");
-            Map(x => x.DiaDiario, "DIA_DIARIO");
+            //Map(x => x.CantidadSemana, "CANTIDAD_SEMANAS");
+            //Map(x => x.DiaDiario, "DIA_DIARIO");
             Map(x => x.CalificacionConductor, "CALIFICACION_CONDUCTOR").Nullable();
             References(x => x.Destino).Column("DESTINO_ID").Not.Nullable().Cascade.None();
             References(x => x.Origen).Column("ORIGEN_ID").Not.Nullable().Cascade.None();

@@ -195,11 +195,11 @@ namespace UnAventon.Controllers
             ISession session = NHibernateHelper.GetCurrentSession();
             IList<Viajes> viajesUsuario = session.QueryOver<Viajes>().Where(x => x.Conductor.Id == usuarioLogueado.Id).List();
             DateTime fechaFinViaje = DateTime.Parse(fechaViaje).AddMinutes(double.Parse(duracion));
-            if (viajesUsuario.Any(x => x.FechaViaje < DateTime.Parse(fechaViaje) && DateTime.Parse(fechaViaje) < x.FechaViaje.AddMinutes((double)x.Duracion)))
+            if (viajesUsuario.Any(x => x.FechaViaje <= DateTime.Parse(fechaViaje) && DateTime.Parse(fechaViaje) <= x.FechaViaje.AddMinutes((double)x.Duracion)))
             {
                 return false;//return Json(new { mensaje = "Usted ya tiene un viaje planificado en ese rango horario." }, JsonRequestBehavior.AllowGet);
             }
-            if (viajesUsuario.Any(x => x.FechaViaje < DateTime.Parse(fechaViaje).AddMinutes(double.Parse(duracion)) && DateTime.Parse(fechaViaje).AddMinutes(double.Parse(duracion)) < x.FechaViaje.AddMinutes((double)x.Duracion)))
+            if (viajesUsuario.Any(x => x.FechaViaje <= DateTime.Parse(fechaViaje).AddMinutes(double.Parse(duracion)) && DateTime.Parse(fechaViaje).AddMinutes(double.Parse(duracion)) <= x.FechaViaje.AddMinutes((double)x.Duracion)))
             {
                 return false;//return Json(new { mensaje = "Usted ya tiene un viaje planificado en ese rango horario." }, JsonRequestBehavior.AllowGet);
             }

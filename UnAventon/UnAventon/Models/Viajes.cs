@@ -22,8 +22,8 @@ namespace UnAventon.Models
         public virtual Localidades Destino { get; set; }
         public virtual Localidades Origen { get; set; }
         public virtual Usuarios Conductor { get; set; }
-        public virtual string DiaDiario { get; set; }
-        public virtual int CantidadSemana { get; set; }
+        //public virtual string DiaDiario { get; set; }
+        //public virtual int CantidadSemana { get; set; }
         public virtual int Duracion { get; set; }
         public virtual IList<Pasajeros> Pasajeros { get; set; }
     }

@@ -81,61 +81,110 @@
     function nuevoAuto() {
         $("#modalAuto").modal();
         }
-    function guardarAutoEditar() {
-        $.ajax({
-            url: '@Url.Action("EditarAuto","Usuario")',
-            data: {
-                marca: $("#marcaEditar").val(),
-                modelo: $("#modeloEditar").val(),
-                patente: $("#patenteEditar").val(),
-                asientos: $("#asientosEditar").val(),
-                idAuto: $("#IdAutoSeleccionado").val()
-            },
-            beforeSend: function (xhr) {
-                //Template de loading
-                Loading();
-            },
-            success: function (data) {
-                if (data.mensaje == "") {
-                    $("body").loadingModal('hide');
-                    $("#modalAuto").modal("hide");
-                    $("#marca").val("");
-                    $("#modelo").val("");
-                    $("#patente").val("");
-                    $("#asientos").val("");
-                    swal({
-                        title: "",
-                        text: "El auto ha sido editado con exito.",
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Aceptar',
-                        closeOnConfirm: false
-                    },
-                        function () {
-                                window.location.reload();
-                        }
-                    )
-                }
-                else {
-                    $("#modalAuto").modal("hide");
-                    $("body").loadingModal('hide');
-                    $("#email").val("");
-                    $("#password").val("");
-                    swal({
-                        title: "",
-                        text: data.mensaje,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Aceptar',
-                        closeOnConfirm: true
-                    })
-                }
-
+        function guardarAutoEditar() {
+            if (!SiValidaAsientos($("#asientosEditar").val())) {
+                swal({
+                    title: "",
+                    text: "Especifique la cantidad de asientos en numeros.",
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: 'Aceptar'
+                })
             }
-         });
-    }
-    function guardarAuto() {
-         $.ajax({
+            else if (!SiValidaCamposEditar()) {
+                $.ajax({
+                    url: '@Url.Action("EditarAuto","Usuario")',
+                    data: {
+                        marca: $("#marcaEditar").val(),
+                        modelo: $("#modeloEditar").val(),
+                        patente: $("#patenteEditar").val(),
+                        asientos: $("#asientosEditar").val(),
+                        idAuto: $("#IdAutoSeleccionado").val()
+                    },
+                    beforeSend: function (xhr) {
+                        //Template de loading
+                        Loading();
+                    },
+                    success: function (data) {
+                        if (data.mensaje == "") {
+                            $("body").loadingModal('hide');
+                            $("#modalAuto").modal("hide");
+                            $("#marca").val("");
+                            $("#modelo").val("");
+                            $("#patente").val("");
+                            $("#asientos").val("");
+                            swal({
+                                title: "",
+                                text: "El auto ha sido editado con exito.",
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Aceptar',
+                                closeOnConfirm: false
+                            },
+                                function () {
+                                    window.location.reload();
+                                }
+                            )
+                        }
+                        else {
+                            $("#modalAuto").modal("hide");
+                            $("body").loadingModal('hide');
+                            $("#email").val("");
+                            $("#password").val("");
+                            swal({
+                                title: "",
+                                text: data.mensaje,
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Aceptar',
+                                closeOnConfirm: true
+                            })
+                        }
+
+                    }
+                });
+            }
+            else {
+                swal({
+                    title: "",
+                    text: "Todos los campos son obligatorios.",
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: 'Aceptar'
+                })
+            }
+
+        }
+
+        function SiValidaAsientos(asientos) {
+            var regex = /^\d+$/;
+            return regex.test(asientos);
+        }
+
+        function SiValidaCampos() {
+            if ($("#marca").val() == "" || $("#modelo").val() == "" || $("#patente").val() == "" || $("#asientos").val() == "") {
+                return false;
+            }
+            return true;
+        }
+        function SiValidaCamposEditar() {
+            if ($("#marcaEditar").val() == "" || $("#modeloEditar").val() == "" || $("#patenteEditar").val() == "" || $("#asientosEditar").val() == "") {
+                return false;
+            }
+            return true;
+        }
+        function guardarAuto() {
+            if (!SiValidaAsientos($("#asientos").val())) {
+                swal({
+                    title: "",
+                    text: "Especifique la cantidad de asientos en numeros.",
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: 'Aceptar'
+                })
+            }
+            else if (!SiValidaCampos()) {
+                $.ajax({
             url: '@Url.Action("GuardarAuto","Usuario")',
             data: {
                 marca: $("#marca").val(),
@@ -187,8 +236,20 @@
                 }
 
             }
-        });
+            });
+            }
+            else {
+                swal({
+                    title: "",
+                    text: "Todos los campos son obligatorios.",
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: 'Aceptar'
+                })
+            }
+
         }
+
     function borrarAuto(id)
     {
         swal({
