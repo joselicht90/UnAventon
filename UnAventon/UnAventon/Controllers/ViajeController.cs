@@ -69,7 +69,7 @@ namespace UnAventon.Controllers
                     Usuarios usuarioLogueado = (Usuarios)Session["UsuarioLogueado"];
                     Viajes viaje = (Viajes)session.Get(typeof(Viajes), idViaje);
                     int cantidadPasajeros = viaje.Pasajeros.Where(x => x.Estado.Equals("Aceptado")).Count();
-                    if(cantidadPasajeros == viaje.Auto.Asientos)
+                    if (cantidadPasajeros == viaje.Auto.Asientos)
                     {
                         return Json(new { mensaje = "Este viaje ya tiene el maximo de pasajeros." }, JsonRequestBehavior.AllowGet);
                     }
@@ -105,7 +105,7 @@ namespace UnAventon.Controllers
                         return Json(new { mensaje = "Este viaje ya tiene el maximo de pasajeros." }, JsonRequestBehavior.AllowGet);
                     }
                     viaje.Pasajeros.Where(x => x.Id == idPasajero).First().Estado = "Aceptado";
-                    
+
                     session.Update(viaje);
                     transaction.Commit();
                     DetalleViaje(viaje.Id);
@@ -149,7 +149,7 @@ namespace UnAventon.Controllers
                 {
                     Viajes viaje = (Viajes)session.Get(typeof(Viajes), idViaje);
                     Pasajeros pasajero = viaje.Pasajeros.Where(x => x.Id == idPasajero).First();
-                    if(pasajero.Estado.Equals("Aceptado") && pasajero.Usuario.CReputacion > 0)
+                    if (pasajero.Estado.Equals("Aceptado") && pasajero.Usuario.CReputacion > 0)
                     {
                         pasajero.Usuario.CReputacion -= 1;
                     }
@@ -175,7 +175,7 @@ namespace UnAventon.Controllers
                 using (ITransaction transaction = session.BeginTransaction())
                 {
                     Viajes viaje = (Viajes)session.Get(typeof(Viajes), idViaje);
-                    if (viaje.Pasajeros.Any(x=>x.Estado.Equals("Aceptado")) && viaje.Conductor.PReputacion>0)
+                    if (viaje.Pasajeros.Any(x => x.Estado.Equals("Aceptado")) && viaje.Conductor.PReputacion > 0)
                     {
                         viaje.Conductor.PReputacion -= 1;
                     }
@@ -205,13 +205,80 @@ namespace UnAventon.Controllers
             }
             return true;
         }
+        private bool ViajeValidoEditar(Usuarios usuarioLogueado, string fechaViaje, string duracion, long idViaje)
+        {
+            ISession session = NHibernateHelper.GetCurrentSession();
+            IList<Viajes> viajesUsuario = session.QueryOver<Viajes>().Where(x => x.Conductor.Id == usuarioLogueado.Id).List();
+            viajesUsuario = viajesUsuario.Where(x => x.Id != idViaje).ToList();
+            DateTime fechaFinViaje = DateTime.Parse(fechaViaje).AddMinutes(double.Parse(duracion));
+            if (viajesUsuario.Any(x => x.FechaViaje <= DateTime.Parse(fechaViaje) && DateTime.Parse(fechaViaje) <= x.FechaViaje.AddMinutes((double)x.Duracion)))
+            {
+                return false;//return Json(new { mensaje = "Usted ya tiene un viaje planificado en ese rango horario." }, JsonRequestBehavior.AllowGet);
+            }
+            if (viajesUsuario.Any(x => x.FechaViaje <= DateTime.Parse(fechaViaje).AddMinutes(double.Parse(duracion)) && DateTime.Parse(fechaViaje).AddMinutes(double.Parse(duracion)) <= x.FechaViaje.AddMinutes((double)x.Duracion)))
+            {
+                return false;//return Json(new { mensaje = "Usted ya tiene un viaje planificado en ese rango horario." }, JsonRequestBehavior.AllowGet);
+            }
+            return true;
+        }
+
+        public JsonResult EditarViaje(string origen, string destino, string auto, string costo, string duracion, string fechaViaje, long idViaje)
+        {
+            Usuarios usuarioLogueado = (Usuarios)Session["UsuarioLogueado"];
+            try
+            {
+                if (costo.Contains('.') || costo.Contains(','))
+                {
+                    return Json(new { mensaje = "Debe ingresar un costo en valores enteros." }, JsonRequestBehavior.AllowGet);
+
+                }
+                if (duracion.Contains('.') || duracion.Contains(','))
+                {
+                    return Json(new { mensaje = "Debe ingresar un aproximado de minutos que dura el viaje en valores enteros." }, JsonRequestBehavior.AllowGet);
+
+                }
+                if (auto.Equals(""))
+                {
+                    return Json(new { mensaje = "El viaje debe contas con un auto seleccionado." }, JsonRequestBehavior.AllowGet);
+
+                }
+                if (DateTime.Parse(fechaViaje) < DateTime.Today)
+                {
+                    return Json(new { mensaje = "El viaje no puede ser programado para una fecha anterior al dia de hoy." }, JsonRequestBehavior.AllowGet);
+
+                }
+                ISession session = NHibernateHelper.GetCurrentSession();
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    Viajes viaje = (Viajes)session.Get(typeof(Viajes), idViaje);
+                    viaje.Precio = decimal.Parse(costo);
+                    viaje.FechaViaje = DateTime.Parse(fechaViaje);
+                    if (!ViajeValidoEditar(usuarioLogueado, viaje.FechaViaje.ToString(), duracion, idViaje))
+                    {
+                        return Json(new { mensaje = "Usted ya tiene un viaje planificado en ese rango horario." }, JsonRequestBehavior.AllowGet);
+                    }
+                    viaje.Duracion = int.Parse(duracion);
+                    viaje.Conductor = usuarioLogueado;
+                    viaje.Auto = (Autos)session.Get(typeof(Autos), long.Parse(auto));
+                    viaje.Origen = (Localidades)session.Get(typeof(Localidades), long.Parse(origen));
+                    viaje.Destino = (Localidades)session.Get(typeof(Localidades), long.Parse(destino));
+                    session.Update(viaje);
+                    transaction.Commit();
+                    return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { mensaje = "Ha ocurrido un error al intentar guardar el nuevo viaje." }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         public JsonResult GuardarViaje(string tipo, string origen, string destino, string auto, string costo, string duracion, string fechaViaje, string cantidadSemanas)
         {
             Usuarios usuarioLogueado = (Usuarios)Session["UsuarioLogueado"];
             try
             {
-                if(costo.Contains('.') || costo.Contains(','))
+                if (costo.Contains('.') || costo.Contains(','))
                 {
                     return Json(new { mensaje = "Debe ingresar un costo en valores enteros." }, JsonRequestBehavior.AllowGet);
 
@@ -242,6 +309,7 @@ namespace UnAventon.Controllers
                         viaje.Precio = decimal.Parse(costo);
                         viaje.FechaAlta = DateTime.Today;
                         viaje.FechaViaje = DateTime.Parse(fechaViaje);
+                        viaje.Estado = "ABIERTO";
                         if (!ViajeValido(usuarioLogueado, viaje.FechaViaje.ToString(), duracion))
                         {
                             return Json(new { mensaje = "Usted ya tiene un viaje planificado en ese rango horario." }, JsonRequestBehavior.AllowGet);
@@ -253,17 +321,18 @@ namespace UnAventon.Controllers
                         viaje.Origen = (Localidades)session.Get(typeof(Localidades), long.Parse(origen));
                         viaje.Destino = (Localidades)session.Get(typeof(Localidades), long.Parse(destino));
                         session.Save(viaje);
-                        
+
                     }
                     else if (tipo.Equals("1"))
                     {
                         int dias = 7 * int.Parse(cantidadSemanas);
-                        for(int i = 0; i < dias; i++)
+                        for (int i = 0; i < dias; i++)
                         {
                             Viajes viaje = new Viajes();
                             viaje.CalificacionConductor = 0;
                             viaje.Precio = decimal.Parse(costo);
                             viaje.FechaAlta = DateTime.Today;
+                            viaje.Estado = "ABIERTO";
                             viaje.FechaViaje = DateTime.Parse(fechaViaje).AddDays(i);
                             if (!ViajeValido(usuarioLogueado, viaje.FechaViaje.ToString(), duracion))
                             {
@@ -278,16 +347,17 @@ namespace UnAventon.Controllers
                             session.Save(viaje);
                         }
                     }
-                    else if(tipo.Equals("2"))
+                    else if (tipo.Equals("2"))
                     {
                         for (int i = 0; i < int.Parse(cantidadSemanas); i++)
                         {
-                            
+
                             Viajes viaje = new Viajes();
                             viaje.CalificacionConductor = 0;
                             viaje.Precio = decimal.Parse(costo);
                             viaje.FechaAlta = DateTime.Today;
-                            viaje.FechaViaje = DateTime.Parse(fechaViaje).AddDays(7*i);
+                            viaje.Estado = "ABIERTO";
+                            viaje.FechaViaje = DateTime.Parse(fechaViaje).AddDays(7 * i);
                             if (!ViajeValido(usuarioLogueado, viaje.FechaViaje.ToString(), duracion))
                             {
                                 return Json(new { mensaje = "Usted ya tiene un viaje planificado en ese rango horario." }, JsonRequestBehavior.AllowGet);

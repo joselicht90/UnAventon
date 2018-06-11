@@ -159,14 +159,6 @@
 
 
             });
-            $("#tipoDeViajeEditar").select2({
-                width: 'resolve',
-                minimumResultsForSearch: -1
-            });
-            $("#duracionPeriodicoEditar").select2({
-                width: 'resolve',
-                minimumResultsForSearch: -1
-            });
         })
     function EliminarViaje() {
         swal({
@@ -445,17 +437,109 @@
             $("#costoEditar").val(@Model.Precio);
             $("#tipoViajeEditar").val(@Model.Periodico);
             $("#duracionEditar").val(@Model.Duracion);
-            $('#fechaDeViajeEditar').data('DateTimePicker').date("01/01/2018 12:34");
+            //$('#fechaDeViajeEditar').data('DateTimePicker').date("01/01/2018 12:34");
             $('#fechaDeViajeEditar').trigger('change');
             @*$("#textViajeEditarFecha").val(@Model.FechaViaje.ToShortDateString());*@
         }
-        $("#tipoDeViajeEditar").on("change", function () {
-            if ($("#tipoDeViajeEditar").val() == '0') {
-                $("#formDuracionPeriodicoEditar").show();
-            }
-            else {
-                $("#formDuracionPeriodicoEditar").hide();
-            }
-        });
+
+
+        function SiSoloMoneda(campo) {
+            var regex = /^\$?\-?([1-9]{1}[0-9]{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))$|^\-?\$?([1-9]{1}\d{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))$|^\(\$?([1-9]{1}\d{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))\)$/;
+            return regex.test(campo);
+        }
+        function SiSoloNumeros(campo) {
+            var regex = /^[+]?\d+([.]\d+)?$/;
+            return regex.test(campo);
+        }
+        function SiValidaCamposViaje() {
+            debugger;
+            return ($("#autosEditar").val() == "" || $("#origenEditar").val() == "" || $("#destinoEditar").val() == "" || $("#duracionEditar").val() == "" || $("#textViajeEditarFecha").val() == "") 
+            
+        }
+
+        function guardarViajeEditado() {
+        debugger;
+        if (SiValidaCamposViaje()) {
+            swal({
+                title: "",
+                text: "Todos los campos son obligatorios.",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Aceptar',
+                closeOnConfirm: false
+            })
+        }
+        else if (!SiSoloNumeros($("#duracionEditar").val())) {
+            swal({
+                title: "",
+                text: "La duración debe ser expresada en minutos.",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Aceptar',
+                closeOnConfirm: false
+            })
+        }
+        else if (!SiSoloMoneda($("#costoEditar").val())) {
+            swal({
+                title: "",
+                text: "Solo se permiten digitos en el costo.",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Aceptar',
+                closeOnConfirm: false
+            })
+        }
+        else {
+
+        
+             $.ajax({
+                url: '@Url.Action("EditarViaje","Viaje")',
+                data: {
+                    origen: $("#origenEditar").val(),
+                    destino: $("#destinoEditar").val(),
+                    auto: $("#autosEditar").val(),
+                    duracion: $("#duracionEditar").val(),
+                    costo: $("#costoEditar").val(),
+                    fechaViaje: $("#textViajeEditarFecha").val(),
+                    idViaje: @Model.Id
+                },
+                beforeSend: function (xhr) {
+                    //Template de loading
+                    Loading();
+                },
+                success: function (data) {
+                    $("body").loadingModal('hide');
+                    if (data.mensaje == "") {
+                        swal({
+                            title: "",
+                            text: "El viaje ha sido guardado con exito.",
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Aceptar',
+                            closeOnConfirm: false
+                        },
+                            function (isConfirm) {
+                                if (isConfirm) {
+                                    window.location.reload();
+                                }
+                            }
+                        )
+                    }
+                    else {
+                        swal({
+                            title: "",
+                            text: data.mensaje,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Aceptar',
+                            closeOnConfirm: true
+                        })
+                    }
+
+                }
+            });
+        }
+
+    }
     </script>
 }

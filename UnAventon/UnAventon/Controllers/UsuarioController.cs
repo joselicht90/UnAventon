@@ -36,7 +36,7 @@ namespace UnAventon.Controllers
                 }
                 ISession session = NHibernateHelper.GetCurrentSession();
                 List<Viajes> viajesDelAuto = session.QueryOver<Viajes>().Where(x => x.Auto.Id == long.Parse(idAuto)).List().ToList();
-                if(viajesDelAuto.Any(x=>x.FechaBaja != null))
+                if(viajesDelAuto.Any(x=>x.FechaBaja == null))
                 {
                     return Json(new { mensaje = "El auto se encuentra en un viaje activo y no puede ser modificado." }, JsonRequestBehavior.AllowGet);
 
@@ -102,6 +102,12 @@ namespace UnAventon.Controllers
                 ISession session = NHibernateHelper.GetCurrentSession();
                 using (ITransaction transaction = session.BeginTransaction())
                 {
+                    List<Viajes> viajesDelAuto = session.QueryOver<Viajes>().Where(x => x.Auto.Id == long.Parse(id)).List().ToList();
+                    if (viajesDelAuto.Any(x => x.FechaBaja == null))
+                    {
+                        return Json(new { mensaje = "El auto se encuentra en un viaje activo y no puede ser modificado." }, JsonRequestBehavior.AllowGet);
+
+                    }
                     Autos auto = session.QueryOver<Autos>().Where(x => x.Id == long.Parse(id)).SingleOrDefault();
                     session.Delete(auto);
                     transaction.Commit();
