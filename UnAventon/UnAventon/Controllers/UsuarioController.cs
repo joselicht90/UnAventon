@@ -17,6 +17,13 @@ namespace UnAventon.Controllers
         {
             ISession session = NHibernateHelper.GetCurrentSession();
             Usuarios usuarioLogueado = session.QueryOver<Usuarios>().Where(x => x.Id == ((Usuarios)Session["UsuarioLogueado"]).Id).SingleOrDefault();
+            List<Viajes> viajesUsuario = session.QueryOver<Viajes>().Where(x => x.Conductor.Id == usuarioLogueado.Id).List().ToList();
+            List<Pasajeros> pasajerosUsuario = session.QueryOver<Pasajeros>().Where(x => x.Usuario.Id == usuarioLogueado.Id).List().ToList();
+            foreach(Pasajeros p in pasajerosUsuario)
+            {
+                viajesUsuario.Add(session.QueryOver<Viajes>().Where(x => x.Id == p.Viaje).SingleOrDefault());
+            }
+            ViewBag.ViajesUsuario = viajesUsuario;
             return View(usuarioLogueado);
         }
         public JsonResult EditarAuto(string marca, string modelo, string patente, string asientos, string idAuto)

@@ -18,6 +18,7 @@
         <ul class="nav nav-tabs" role="tablist">
             <li class="active" style="background-color:white"><a href="#step1" data-toggle="tab" aria-expanded="true" style="font-size:x-large"><i class="glyphicon glyphicon-user"></i> Mis Datos</a></li>
             <li class="" style="background-color:white"><a href="#step2" data-toggle="tab" aria-expanded="true" style="font-size:x-large"><i class="glyphicon glyphicon-list"></i> Mis Autos</a></li>
+            <li class="" style="background-color:white"><a href="#step3" data-toggle="tab" aria-expanded="true" style="font-size:x-large"><i class="glyphicon glyphicon-list"></i> Mis Viajes</a></li>
         </ul>
         <div class="tab-content clearfix" style="margin-top:2em">
             <div class="tab-pane fade active in" id="step1">
@@ -44,6 +45,9 @@
             <div class="tab-pane fade" id="step2">
                 @Html.Partial("_ListadoAutos")
             </div>
+            <div class="tab-pane fade" id="step3">
+                @Html.Partial("_ListadoViajes")
+            </div>
         </div>
     </div>
 </div>
@@ -67,6 +71,16 @@
             "aoColumnDefs": [
                 { aTargets: [4], bSortable: false },
             ]
+        });
+        $("#tablaViajes").DataTable({
+            "searching": false,
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ elementos por pagina",
+                "zeroRecords": "Nada encontrado",
+                "info": "Mostrando pagina _PAGE_ de _PAGES_",
+                "infoEmpty": "No hay registros.",
+                "infoFiltered": "(filtrado de _MAX_ elementos)"
+            }
         });
     });
 
@@ -298,7 +312,10 @@
             }
         );
 
-    }
+        }
+        function verDetalleViaje(idViaje){
+            window.location.href = '@Url.Action("DetalleViaje", "Viaje")?idViaje=' + idViaje;
+        }
     </script>
 }
 

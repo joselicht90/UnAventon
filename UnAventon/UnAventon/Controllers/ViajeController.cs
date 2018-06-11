@@ -211,6 +211,16 @@ namespace UnAventon.Controllers
             Usuarios usuarioLogueado = (Usuarios)Session["UsuarioLogueado"];
             try
             {
+                if(costo.Contains('.') || costo.Contains(','))
+                {
+                    return Json(new { mensaje = "Debe ingresar un costo en valores enteros." }, JsonRequestBehavior.AllowGet);
+
+                }
+                if (duracion.Contains('.') || duracion.Contains(','))
+                {
+                    return Json(new { mensaje = "Debe ingresar un aproximado de minutos que dura el viaje en valores enteros." }, JsonRequestBehavior.AllowGet);
+
+                }
                 if (auto.Equals(""))
                 {
                     return Json(new { mensaje = "El viaje debe contas con un auto seleccionado." }, JsonRequestBehavior.AllowGet);
@@ -297,7 +307,7 @@ namespace UnAventon.Controllers
             }
             catch (Exception e)
             {
-                return Json(new { mensaje = "Ha ocurrido un error al intentar guardar el nuevo auto." }, JsonRequestBehavior.AllowGet);
+                return Json(new { mensaje = "Ha ocurrido un error al intentar guardar el nuevo viaje." }, JsonRequestBehavior.AllowGet);
             }
         }
     }
