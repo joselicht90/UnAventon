@@ -21,7 +21,7 @@
             @*Botones de la barra de navegacion*@
             <ul class="nav navbar-nav navbar-left">
                 <li style="margin-left: 700px">
-                    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" href="#">Buscar Viajes</button>
+                    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" onclick="goToBusqueda()" href="">Buscar Viajes</button>
                 </li>
                 <li>
                     <button type="button" class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" onclick="GoToNuevoViaje()" href="">Crear Viaje</button>
@@ -163,6 +163,10 @@
     function miPerfil() {
         Loading();
         window.location = '@Url.Action("MiPerfil","Usuario")';
+    }
+    function goToBusqueda() {
+        Loading();
+        window.location = '@Url.Action("BuscarViaje","Busqueda")';
     }
 
     //Inicia sesion

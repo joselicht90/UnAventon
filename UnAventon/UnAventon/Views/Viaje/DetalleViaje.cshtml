@@ -7,7 +7,7 @@
     ViewBag.Title = "NuevoViaje";
 }
 
-<h2>Detalle de Viaje</h2>
+<h2>Detalle de Viaje - @Model.Estado</h2>
 @if (ViewBag.Pagar != null)
 {
     if (ViewBag.Pagar == true)
@@ -23,21 +23,33 @@
 <div class="row">
     @if (ViewBag.ConductorDelViaje != null)
     {
-        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="GoToEditarViaje()">Modificar Viaje</button>
-        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="EliminarViaje()">Eliminar Viaje</button>
+        if (Model.Estado.Equals("ABIERTO"))
+        {
+
+            <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="GoToEditarViaje()">Modificar Viaje</button>
+            <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="EliminarViaje()">Eliminar Viaje</button>
+            <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="CerrarPostulaciones()">Cerrar Potulaciones</button>
+        }
+        else if (Model.Estado.Equals("EN_CURSO"))
+        {
+            <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="FinalizarViaje()">Finalizar Viaje</button>
+        }
     }
     else
     {
-            if (!(Model.Pasajeros.Where(x => x.Estado.Equals("Aceptado")).Count() == Model.Auto.Asientos))
+        if (Model.Estado.Equals("ABIERTO"))
         {
-            if (ViewBag.Postular != null)
+            if (!(Model.Pasajeros.Where(x => x.Estado.Equals("Aceptado")).Count() == Model.Auto.Asientos))
             {
-                <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="postularse()">Postularse al viaje</button>
+                if (ViewBag.Postular != null)
+                {
+                    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="postularse()">Postularse al viaje</button>
+                }
             }
         }
-        if (ViewBag.Pagar != null)
+        else if (Model.Estado.Equals("FINALIZADO") && Model.CalificacionConductor == null)
         {
-            <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="">Pagar</button>
+            <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="calificarModal(-1)">Calificar Piloto</button>
         }
     }
 
@@ -96,7 +108,7 @@
                     <div class="form-group col-lg-12">
                         <div class="input-group" style="display:inline-flex">
                             <label class="cols-lg-12 control-label" style="margin-right:2em;background: lightgray;font-size: x-large;padding-left: 0.5em;padding-right: 0.5em">Reputacion del Conductor: </label>
-                            <label class="cols-lg-12" style="font-size: x-large">@Model.CalificacionConductor</label>
+                            <label class="cols-lg-12" style="font-size: x-large">@Model.Conductor.PReputacion</label>
                         </div>
                     </div>
                 </div>
@@ -111,7 +123,7 @@
             <div class="panel-body">
                 @foreach (Pasajeros pasajero in Model.Pasajeros)
                 {
-                    if (!pasajero.Estado.Equals("Rechazado"))
+                    if (!pasajero.Estado.Equals("RECHAZADO"))
                     {
                         <div class="form-group col-lg-12">
                             <div class="input-group" style="display:inline-flex">
@@ -119,16 +131,32 @@
                                 <label class="cols-lg-12" style="font-size: x-large">@pasajero.Usuario.Nombre @pasajero.Usuario.Apellido (@pasajero.Calificacion)</label>
                                 @if (ViewBag.IdUsuarioLogueado == pasajero.Usuario.Id)
                                 {
-                                    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="background-color:darkred;height: 2em; margin-left:7em" onclick="retirarPostulacion(@pasajero.Id)"><p class="glyphicon glyphicon-remove-circle"></p></button>
+                                    if (Model.Estado.Equals("ABIERTO"))
+                                    {
+                                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="background-color:darkred;height: 2em; margin-left:7em" onclick="retirarPostulacion(@pasajero.Id)"><p class="glyphicon glyphicon-remove-circle"></p></button>
+
+                                    }
                                 }
                                 else
                                 {
-                                    if (!pasajero.Estado.Equals("Aceptado") && ViewBag.ConductorDelViaje != null)
+                                    if (Model.Estado.Equals("ABIERTO"))
                                     {
-                                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="height: 2em; margin-left:7em" onclick="AceptarPasajero(@pasajero.Id)"><p class="glyphicon glyphicon-check"></p></button>
+                                        if (!pasajero.Estado.Equals("Aceptado") && ViewBag.ConductorDelViaje != null)
+                                        {
+                                            <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="height: 2em; margin-left:7em" onclick="AceptarPasajero(@pasajero.Id)"><p class="glyphicon glyphicon-check"></p></button>
+                                        }
                                         <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="background-color:darkred;height: 2em; margin-left:1em" onclick="RechazarPasajero(@pasajero.Id)"><p class="glyphicon glyphicon-remove-circle"></p></button>
+                                    }
+                                    else if (Model.Estado.Equals("EN_CURSO"))
+                                    {
+                                        if (!pasajero.Estado.Equals("Calificado"))
+                                        {
+                                            <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="height: 2em; margin-left:7em" onclick="calificarModal(@pasajero.Id)"><p class="glyphicon glyphicon-arrow-up"></p></button>
+
+                                        }
 
                                     }
+
                                 }
                             </div>
                         </div>
@@ -139,6 +167,8 @@
     </div>
 </div>
 @Html.Partial("_EditarViaje")
+@Html.Partial("_Calificacion")
+@Html.Hidden("Id_Pasajero_Seleccionado")
 @section Scripts{
     <script src="~/Content/select2/select2.js"></script>
     <script src="~/Scripts/moment.js"></script>
@@ -186,6 +216,121 @@
                                 swal({
                                     title: "",
                                     text: "El viaje ha sido eliminado con exito.",
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Aceptar',
+                                    closeOnConfirm: false
+                                },
+                                    function (isConfirm) {
+                                        if (isConfirm) {
+                                            window.location.href='@Url.Action("Index","Home")';
+                                        }
+                                    }
+                                )
+
+                            }
+                            else {
+                                swal({
+                                    title: "",
+                                    text: data.mensaje,
+                                    type: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Aceptar',
+                                    closeOnConfirm: true
+                                })
+                            }
+
+                        }
+                    });
+                }
+
+            }
+        )
+        };
+
+        function CerrarPostulaciones() {
+        swal({
+            title: "",
+            text: "Esta seguro que quiere cerrar las postulaciones del viaje?.",
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Aceptar',
+            closeOnConfirm: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: '@Url.Action("CerrarPostulaciones","Viaje")',
+                        data: {
+                            idViaje: @Model.Id
+                        },
+                        beforeSend: function (xhr) {
+                            Loading();
+                        },
+                        success: function (data) {
+                            $("body").loadingModal("hide");
+                            if (data.mensaje == "") {
+                                swal({
+                                    title: "",
+                                    text: "Se han cerrado las postulaciones.",
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Aceptar',
+                                    closeOnConfirm: false
+                                },
+                                    function (isConfirm) {
+                                        if (isConfirm) {
+                                            window.location.href='@Url.Action("Index","Home")';
+                                        }
+                                    }
+                                )
+
+                            }
+                            else {
+                                swal({
+                                    title: "",
+                                    text: data.mensaje,
+                                    type: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Aceptar',
+                                    closeOnConfirm: true
+                                })
+                            }
+
+                        }
+                    });
+                }
+
+            }
+        )
+        };
+        function FinalizarViaje() {
+        swal({
+            title: "",
+            text: "Quiere finalizar el viaje? Recuerde que debe calificar a sus pasajeros.",
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Aceptar',
+            closeOnConfirm: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: '@Url.Action("FinalizarViaje", "Viaje")',
+                        data: {
+                            idViaje: @Model.Id
+                        },
+                        beforeSend: function (xhr) {
+                            Loading();
+                        },
+                        success: function (data) {
+                            $("body").loadingModal("hide");
+                            if (data.mensaje == "") {
+                                swal({
+                                    title: "",
+                                    text: "El viaje ha sido cerrado.",
                                     type: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Aceptar',
@@ -426,6 +571,45 @@
             }
         )
         };
+
+        function calificar(puntaje, tipoUsuario) {
+            $.ajax({
+                        url: '@Url.Action("Calificar","Viaje")',
+                        data: {
+                            idViaje: @Model.Id,
+                            idPasajero: $("#Id_Pasajero_Seleccionado").val(),
+                            puntaje: puntaje
+                        },
+                        beforeSend: function (xhr) {
+                            Loading();
+                        },
+                        success: function (data) {
+                            $("body").loadingModal("hide");
+                            if (data.mensaje == "") {
+                                
+                                window.location.reload();
+                                    
+                            }
+                            else {
+                                swal({
+                                    title: "",
+                                    text: data.mensaje,
+                                    type: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Aceptar',
+                                    closeOnConfirm: true
+                                })
+                            }
+
+                        }
+                    });
+        }
+
+        function calificarModal(id)
+        {
+            $("#Id_Pasajero_Seleccionado").val(id);
+            $("#modalCalificar").modal();
+        }
         function GoToEditarViaje() {
             $("#editarViaje").modal();
             $("#autosEditar").val(@Model.Auto.Id);
@@ -453,8 +637,8 @@
         }
         function SiValidaCamposViaje() {
             debugger;
-            return ($("#autosEditar").val() == "" || $("#origenEditar").val() == "" || $("#destinoEditar").val() == "" || $("#duracionEditar").val() == "" || $("#textViajeEditarFecha").val() == "") 
-            
+            return ($("#autosEditar").val() == "" || $("#origenEditar").val() == "" || $("#destinoEditar").val() == "" || $("#duracionEditar").val() == "" || $("#textViajeEditarFecha").val() == "")
+
         }
 
         function guardarViajeEditado() {
@@ -491,7 +675,7 @@
         }
         else {
 
-        
+
              $.ajax({
                 url: '@Url.Action("EditarViaje","Viaje")',
                 data: {

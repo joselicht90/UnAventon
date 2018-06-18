@@ -173,6 +173,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BusquedaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Controllers\ViajeController.cs" />
@@ -386,6 +387,9 @@
     <Content Include="Views\Shared\_NuevoViaje.cshtml" />
     <Content Include="Views\Viaje\_EditarViaje.cshtml" />
     <Content Include="Views\Usuario\_ListadoViajes.cshtml" />
+    <Content Include="Views\Viaje\_Calificacion.cshtml" />
+    <Content Include="Views\Busqueda\BuscarViaje.cshtml" />
+    <Content Include="Views\Busqueda\_ListadoViajesBusqueda.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

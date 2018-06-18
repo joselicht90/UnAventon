@@ -1,0 +1,80 @@
+﻿@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <script src="~/Scripts/datatables.js"></script>*@
+@*<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet"/>*@
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<link href="~/Content/datetimepicker/datetimepicker.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="~/Content/jquery.loadingModal.css" rel="stylesheet" />
+<link href="~/Content/dataTables.bootstrap4.css" rel="stylesheet" />
+
+@using UnAventon.Models
+@model Usuarios
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Buscar Viajes";
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="input-group">
+            <label class="col-md-3 control-label" style="margin-right:2em">Origen</label>
+            <span class="select2-container" style="margin-right:2em">
+                <select id="origenX" class="col-md-3 select2-selection--single" dir="rtl" tabindex="-1" aria-hidden="true" style="width:100%; margin-right:2em">
+                    @foreach (Localidades localidadOrigen in (IList<Localidades>)Session["Localidades"])
+                    {
+                        <option value="@localidadOrigen.Id"> @localidadOrigen.Partido.Nombre - @localidadOrigen.Nombre</option>
+                    }
+                </select>
+            </span>
+            <label class="col-md-3 control-label" style="margin-right:2em">Destino</label>
+            <span class="select2-container" style="margin-right:2em">
+                <select id="destinoX" class="col-md-3 select2-selection--single" dir="rtl" tabindex="-1" aria-hidden="true" style="width:100%; margin-right:2em">
+                    @foreach (Localidades localidadOrigen in (IList<Localidades>)Session["Localidades"])
+                    {
+                        <option value="@localidadOrigen.Id"> @localidadOrigen.Partido.Nombre - @localidadOrigen.Nombre</option>
+                    }
+                </select>
+            </span>
+            @*<label style="margin-right:2em">Fecha del Viaje</label>
+            <div class="input-append date form_datetime" id="fechaDeViaje">
+                <input type="text" id="textFechaViaje" class="form-control" style="margin-right:2em">
+                <span class="add-on"><i class="icon-th"></i></span>
+            </div>*@
+        </div>
+        <div class="form-group">
+            @Html.Partial("_ListadoViajesBusqueda")
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/Scripts/swal.js"></script>
+    <script src="~/Scripts/jquery.loadingModal.js"></script>
+    <script src="~/Content/select2/select2.js"></script>
+    <script src="~/Scripts/jquery.loadingModal.js"></script>
+    <script src="~/Scripts/datatables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#tablaViajes").DataTable({
+                "searching": false,
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ elementos por pagina",
+                    "zeroRecords": "Nada encontrado",
+                    "info": "Mostrando pagina _PAGE_ de _PAGES_",
+                    "infoEmpty": "No hay registros.",
+                    "infoFiltered": "(filtrado de _MAX_ elementos)"
+                }
+            });
+
+            $('#fechaDeViaje').datetimepicker({
+            });
+            $("#origenX").select2({
+                width: 'resolve',
+            });
+            $("#destinoX").select2({
+                width: 'resolve',
+            });
+        });
+    </script>
+}

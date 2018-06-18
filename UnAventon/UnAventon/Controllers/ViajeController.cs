@@ -118,6 +118,102 @@ namespace UnAventon.Controllers
             }
         }
 
+        public JsonResult CerrarPostulaciones(long idViaje)
+        {
+            try
+            {
+                ISession session = NHibernateHelper.GetCurrentSession();
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    Viajes viaje = (Viajes)session.Get(typeof(Viajes), idViaje);
+                    if(DateTime.Today < viaje.FechaViaje)
+                    {
+                        viaje.Estado = "EN_CURSO";
+                    }
+                    else
+                    {
+                        return Json(new { mensaje = "La fecha de viaje ya ha expirado." }, JsonRequestBehavior.AllowGet);
+                    }
+                    session.Update(viaje);
+                    transaction.Commit();
+                    return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { mensaje = "Ha ocurrido un error al intentar aceptar el pasajero." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult Calificar(long idViaje, long idPasajero, long puntaje)
+        {
+            if(idPasajero != -1)
+            {
+                try
+                {
+                    ISession session = NHibernateHelper.GetCurrentSession();
+                    using (ITransaction transaction = session.BeginTransaction())
+                    {
+                        Viajes viaje = (Viajes)session.Get(typeof(Viajes), idViaje);
+                        Pasajeros pasajero = viaje.Pasajeros.Where(x => x.Id == idPasajero).Single();
+                        pasajero.Estado = "Calificado";
+                        pasajero.Usuario.CReputacion += puntaje;
+                        session.Update(pasajero);
+                        transaction.Commit();
+                        return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                catch (Exception e)
+                {
+                    return Json(new { mensaje = "Ha ocurrido un error al intentar calificar al pasajero." }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                try
+                {
+                    ISession session = NHibernateHelper.GetCurrentSession();
+                    using (ITransaction transaction = session.BeginTransaction())
+                    {
+                        Viajes viaje = (Viajes)session.Get(typeof(Viajes), idViaje);
+                        viaje.CalificacionConductor = puntaje;
+                        viaje.Conductor.PReputacion += puntaje;
+                        session.Update(viaje);
+                        transaction.Commit();
+                        return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                catch (Exception e)
+                {
+                    return Json(new { mensaje = "Ha ocurrido un error al intentar calificar al conductor." }, JsonRequestBehavior.AllowGet);
+                }
+            }
+        }
+
+        public JsonResult FinalizarViaje(long idViaje)
+        {
+            try
+            {
+                ISession session = NHibernateHelper.GetCurrentSession();
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    Viajes viaje = (Viajes)session.Get(typeof(Viajes), idViaje);
+                    if (viaje.Pasajeros.Any(x => !x.Estado.Equals("Calificado")))
+                    {
+                        return Json(new { mensaje = "Debe calificar a sus pasajeros para poder finalizar el viaje." }, JsonRequestBehavior.AllowGet);
+                    }
+                    viaje.Estado = "FINALIZADO";
+                    session.Update(viaje);
+                    transaction.Commit();
+                    return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new { mensaje = "Ha ocurrido un error al intentar aceptar el pasajero." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public JsonResult RechazarPasajero(long idViaje, long idPasajero)
         {
             try
@@ -127,6 +223,12 @@ namespace UnAventon.Controllers
                 {
                     Viajes viaje = (Viajes)session.Get(typeof(Viajes), idViaje);
                     Pasajeros pasajero = viaje.Pasajeros.Where(x => x.Id == idPasajero).First();
+                    if (pasajero.Estado.Equals("Aceptado"))
+                    {
+                        Usuarios usuario = viaje.Conductor;
+                        usuario.PReputacion--;
+                        session.Update(usuario);
+                    }
                     viaje.Pasajeros.Remove(pasajero);
                     session.Update(viaje);
                     transaction.Commit();

@@ -17,7 +17,7 @@ namespace UnAventon.Controllers
         {
             ISession session = NHibernateHelper.GetCurrentSession();
             Usuarios usuarioLogueado = session.QueryOver<Usuarios>().Where(x => x.Id == ((Usuarios)Session["UsuarioLogueado"]).Id).SingleOrDefault();
-            List<Viajes> viajesUsuario = session.QueryOver<Viajes>().Where(x => x.Conductor.Id == usuarioLogueado.Id).List().ToList();
+            List<Viajes> viajesUsuario = session.QueryOver<Viajes>().Where(x => x.Conductor.Id == usuarioLogueado.Id && (x.Estado != "" || x.Estado != "Cerrado")).List().ToList();
             List<Pasajeros> pasajerosUsuario = session.QueryOver<Pasajeros>().Where(x => x.Usuario.Id == usuarioLogueado.Id).List().ToList();
             foreach(Pasajeros p in pasajerosUsuario)
             {
