@@ -205,6 +205,7 @@
     <Content Include="Content\banner.end.js" />
     <Content Include="Content\banner.start.js" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\daterangepicker.css" />
     <Content Include="Content\datetimepicker\datetimepicker.css" />
     <Content Include="Content\datetimepicker\datetimepicker.js" />
     <Content Include="Content\datetimepicker\moment.js" />
@@ -345,6 +346,7 @@
     <Content Include="Content\_single.scss" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\datatables.js" />
+    <Content Include="Scripts\daterangepicker.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -390,6 +392,7 @@
     <Content Include="Views\Viaje\_Calificacion.cshtml" />
     <Content Include="Views\Busqueda\BuscarViaje.cshtml" />
     <Content Include="Views\Busqueda\_ListadoViajesBusqueda.cshtml" />
+    <Content Include="Views\Viaje\_Pagar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

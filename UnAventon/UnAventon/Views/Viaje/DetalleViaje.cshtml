@@ -43,7 +43,7 @@
             {
                 if (ViewBag.Postular != null)
                 {
-                    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="postularse()">Postularse al viaje</button>
+                    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="pagar()">Postularse al viaje</button>
                 }
             }
         }
@@ -169,6 +169,7 @@
 @Html.Partial("_EditarViaje")
 @Html.Partial("_Calificacion")
 @Html.Hidden("Id_Pasajero_Seleccionado")
+@Html.Partial("_Pagar")
 @section Scripts{
     <script src="~/Content/select2/select2.js"></script>
     <script src="~/Scripts/moment.js"></script>
@@ -362,8 +363,17 @@
             }
         )
         };
-    function postularse() {
-        swal({
+
+        function pagar() {
+            $("#modalPagar").modal();
+        }
+
+        function postularse() {
+            if ($("#nroTarjeta").val().length != 16) {
+                swal("", "El formato de la tarjeta es incorrecto", "error");
+            }
+            else {
+            swal({
             title: "",
             text: "Esta seguro que quiere postularse al viaje?",
             type: 'warning',
@@ -415,6 +425,8 @@
 
             }
         )
+            }
+
         };
 
         function retirarPostulacion(idPasajero) {
@@ -586,9 +598,9 @@
                         success: function (data) {
                             $("body").loadingModal("hide");
                             if (data.mensaje == "") {
-                                
+
                                 window.location.reload();
-                                    
+
                             }
                             else {
                                 swal({
