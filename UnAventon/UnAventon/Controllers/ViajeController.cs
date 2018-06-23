@@ -32,6 +32,7 @@ namespace UnAventon.Controllers
 
         private void DatosDetalle(long idUsuarioLogueado, Viajes viaje)
         {
+            
             if (viaje.Conductor.Id == idUsuarioLogueado)
             {
                 ViewBag.ConductorDelViaje = true;

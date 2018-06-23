@@ -27,6 +27,7 @@ namespace UnAventon.Models
             References(x => x.Conductor).Column("CONDUCTOR_ID").Not.Nullable().Cascade.None();
             References(x => x.Auto).Column("AUTO_ID").Not.Nullable().Cascade.None();
             HasMany(x => x.Pasajeros).KeyColumn("VIAJES_ID").Cascade.AllDeleteOrphan();
+            HasMany(x => x.Comentarios).KeyColumn("VIAJE_ID").Cascade.AllDeleteOrphan();
 
         }
     }

@@ -26,5 +26,6 @@ namespace UnAventon.Models
         //public virtual int CantidadSemana { get; set; }
         public virtual int Duracion { get; set; }
         public virtual IList<Pasajeros> Pasajeros { get; set; }
+        public virtual IList<Comentarios> Comentarios { get; set; }
     }
 }

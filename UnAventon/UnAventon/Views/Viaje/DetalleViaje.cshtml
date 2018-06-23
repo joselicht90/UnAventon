@@ -166,6 +166,44 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title" style="height:5em">
+                    <a data-toggle="collapse" href="#collapse1" style="font-size:x-large"><b>Comentarios</b></a>
+                    @if (ViewBag.ConductorDelViaje == null)
+                    {
+                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="comentar()" >Comentar</button>
+
+                    }
+                </h2>
+            </div>
+            <div id="collapse1" class="panel-collapse collapse">
+                <div class="panel-body">
+                    @if (Model.Comentarios != null && Model.Comentarios.Count > 0)
+                    {
+                        foreach (Comentarios comentario in Model.Comentarios)
+                        {
+                            <span></span><p>@comentario.Texto</p>
+                            if (comentario.Respuesta != null && comentario.Respuesta != "")
+                            {
+                                <span></span><p>@comentario.Respuesta</p>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <h3>No hay comentarios</h3>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
 @Html.Partial("_EditarViaje")
 @Html.Partial("_Calificacion")
 @Html.Hidden("Id_Pasajero_Seleccionado")

@@ -13,6 +13,8 @@ namespace UnAventon.Models
             Table("UA_COMENTARIOS");
             Id(x => x.Id, "ID").GeneratedBy.Native();
             Map(x => x.Texto, "TEXTO").Not.Nullable();
+            Map(x => x.Respuesta, "RESPUESTA");
+            Map(x => x.ViajeId, "VIAJE_ID");
         }
     }
 }
