@@ -12,6 +12,37 @@ namespace UnAventon.Controllers
 {
     public class ViajeController : Controller
     {
+
+        public JsonResult GuardarComentario(long idViaje, string comentario, string idComentario = null)
+        {
+            try
+            {
+                ISession session = NHibernate.NHibernateHelper.GetCurrentSession();
+                if (idComentario == null || idComentario == "")
+                {
+                    
+                    Viajes viaje = (Viajes)session.Get(typeof(Viajes), idViaje);
+                    Comentarios comentarioNuevo = new Comentarios();
+                    comentarioNuevo.Texto = comentario;
+                    comentarioNuevo.ViajeId = viaje.Id;
+                    session.Save(comentarioNuevo);
+                }
+                else
+                {
+                    Comentarios coment = (Comentarios)session.Get(typeof(Comentarios), long.Parse(idComentario));
+                    coment.Respuesta = comentario;
+                    session.Update(coment);
+                }
+                session.Flush();
+                return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json(new { mensaje = "Ha ocurrido un error al intentar comentar el viaje." }, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
         public ActionResult DetalleViaje(long idViaje)
         {
             try

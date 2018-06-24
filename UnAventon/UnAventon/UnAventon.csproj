@@ -393,6 +393,7 @@
     <Content Include="Views\Busqueda\BuscarViaje.cshtml" />
     <Content Include="Views\Busqueda\_ListadoViajesBusqueda.cshtml" />
     <Content Include="Views\Viaje\_Pagar.cshtml" />
+    <Content Include="Views\Viaje\_Comentar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

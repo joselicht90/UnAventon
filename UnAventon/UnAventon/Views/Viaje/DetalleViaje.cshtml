@@ -171,10 +171,10 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h2 class="panel-title" style="height:5em">
-                    <a data-toggle="collapse" href="#collapse1" style="font-size:x-large"><b>Comentarios</b></a>
-                    @if (ViewBag.ConductorDelViaje == null)
+                    <a data-toggle="collapse" href="#collapse1" style="font-size:x-large"><b>Comentarios (@Model.Comentarios.Count)</b></a>
+                    @if (ViewBag.ConductorDelViaje == null && !Model.Estado.Equals("CERRADO"))
                     {
-                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="comentar()" >Comentar</button>
+                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="comentar()">Preguntar</button>
 
                     }
                 </h2>
@@ -185,11 +185,20 @@
                     {
                         foreach (Comentarios comentario in Model.Comentarios)
                         {
-                            <span></span><p>@comentario.Texto</p>
+                            if (ViewBag.ConductorDelViaje != null && !Model.Estado.Equals("CERRADO") && (comentario.Respuesta == null || comentario.Respuesta.Equals("")))
+                            {
+                                <p><span style="font-size:larger; font-weight:bold">PREGUNTA:  @comentario.Texto</span><button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:right" onclick="responder(@comentario.Id)">Responder</button></p>
+                            }
+                            else
+                            {
+                                <p><span style="font-size:larger; font-weight:bold">PREGUNTA:  @comentario.Texto</span></p>
+                            }
+
                             if (comentario.Respuesta != null && comentario.Respuesta != "")
                             {
-                                <span></span><p>@comentario.Respuesta</p>
+                                <p><span style="font-size:larger; color:dimgray ;font-weight:bold">RESPUESTA:  @comentario.Respuesta</span></p>
                             }
+                            <hr/>
                         }
                     }
                     else
@@ -207,7 +216,9 @@
 @Html.Partial("_EditarViaje")
 @Html.Partial("_Calificacion")
 @Html.Hidden("Id_Pasajero_Seleccionado")
+@Html.Hidden("idComentario")
 @Html.Partial("_Pagar")
+@Html.Partial("_Comentar")
 @section Scripts{
     <script src="~/Content/select2/select2.js"></script>
     <script src="~/Scripts/moment.js"></script>
@@ -654,6 +665,33 @@
                         }
                     });
         }
+        function responder(idComentario) {
+            $("#idComentario").val(idComentario);
+            $("#modalComentar").modal();
+        }
+        function comentar() {
+            $("#idComentario").val(null);
+            $("#modalComentar").modal();
+        }
+        function guardarComentario() {
+            $.ajax({
+                url: '@Url.Action("GuardarComentario","Viaje")',
+                data: {
+                    idComentario: $("#idComentario").val(),
+                    comentario: $("#comentario").val(),
+                    idViaje: @Model.Id
+                },
+                beforeSend: function (xhr) {
+                    //Template de loading
+                    Loading();
+                },
+                success: function (data) {
+                    $("body").loadingModal('hide');
+                    window.location.reload();
+                }
+            });
+        }
+
 
         function calificarModal(id)
         {

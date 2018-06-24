@@ -2,7 +2,7 @@
     <script src="~/Scripts/jquery-ui.js"></script>
     <script src="~/Scripts/datatables.js"></script>*@
 @*<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
-<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet"/>*@
+    <link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet"/>*@
 <link href="~/Content/jquery.loadingModal.css" rel="stylesheet" />
 <link href="~/Content/dataTables.bootstrap4.css" rel="stylesheet" />
 
@@ -19,6 +19,7 @@
             <li class="active" style="background-color:white"><a href="#step1" data-toggle="tab" aria-expanded="true" style="font-size:x-large"><i class="glyphicon glyphicon-user"></i> Mis Datos</a></li>
             <li class="" style="background-color:white"><a href="#step2" data-toggle="tab" aria-expanded="true" style="font-size:x-large"><i class="glyphicon glyphicon-list"></i> Mis Autos</a></li>
             <li class="" style="background-color:white"><a href="#step3" data-toggle="tab" aria-expanded="true" style="font-size:x-large"><i class="glyphicon glyphicon-list"></i> Mis Viajes</a></li>
+            <li class="" style="background-color:white"><a href="#step4" data-toggle="tab" aria-expanded="true" style="font-size:x-large"><i class="glyphicon glyphicon-wrench"></i> Opciones</a></li>
         </ul>
         <div class="tab-content clearfix" style="margin-top:2em">
             <div class="tab-pane fade active in" id="step1">
@@ -48,12 +49,20 @@
             <div class="tab-pane fade" id="step3">
                 @Html.Partial("_ListadoViajes")
             </div>
+            <div class="tab-pane fade" id="step4">
+                <div class="container">
+                    <div class="row">
+                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:left" onclick="CerrarCuenta()">Eliminar Cuenta</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 @Html.Hidden("IdAutoSeleccionado")
 @Html.Partial("_NuevoAuto")
 @Html.Partial("_EditarAuto")
+@Html.Partial("_CerrarCuenta")
 @section Scripts{
     <script src="~/Scripts/jquery.loadingModal.js"></script>
     <script src="~/Scripts/datatables.js"></script>
@@ -72,7 +81,7 @@
                 { aTargets: [4], bSortable: false },
             ]
         });
-        $("#tablaViajes").DataTable({
+        $("#tablaAutos").DataTable({
             "searching": false,
             "language": {
                 "lengthMenu": "Mostrar _MENU_ elementos por pagina",
@@ -80,10 +89,16 @@
                 "info": "Mostrando pagina _PAGE_ de _PAGES_",
                 "infoEmpty": "No hay registros.",
                 "infoFiltered": "(filtrado de _MAX_ elementos)"
-            }
+            },
+            "aoColumnDefs": [
+                { aTargets: [4], bSortable: false },
+            ]
         });
     });
 
+    function CerrarCuenta() {
+
+    }
     function editarAuto(marca, modelo, patente, asientos, idAuto) {
         $("#modalAutoEditar").modal();
         $("#marcaEditar").val(marca);
@@ -182,7 +197,7 @@
             else {
                 return true;
             }
-            
+
         }
         function guardarAuto() {
             if (!SiValidaAsientos($("#asientos").val())) {

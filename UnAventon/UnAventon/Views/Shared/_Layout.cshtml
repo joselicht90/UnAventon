@@ -20,18 +20,33 @@
         <div class="navbar-collapse collapse">
             @*Botones de la barra de navegacion*@
             <ul class="nav navbar-nav navbar-left">
-                <li style="margin-left: 700px">
-                    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" onclick="goToBusqueda()" href="">Buscar Viajes</button>
-                </li>
-                <li>
-                    <button type="button" class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" onclick="GoToNuevoViaje()" href="">Crear Viaje</button>
-                </li>
-                <li>
-                    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" href="#">Quienes Somos?</button>
-                </li>
-                <li>
-                    <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" href="#">Contacto</button>
-                </li>
+                @if (Session["UsuarioLogueado"] != null)
+                {
+                    <li style="margin-left: 700px">
+                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" onclick="goToBusqueda()" href="">Buscar Viajes</button>
+                    </li>
+                    <li>
+                        <button type="button" class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" onclick="GoToNuevoViaje()" href="">Crear Viaje</button>
+                    </li>
+                    <li>
+                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" href="#">Quienes Somos?</button>
+                    </li>
+                    <li>
+                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" href="#">Contacto</button>
+                    </li>
+
+
+                }
+                else
+                {
+                    <li style="margin-left: 700px">
+                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" href="#">Quienes Somos?</button>
+                    </li>
+                    <li>
+                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue" href="#">Contacto</button>
+                    </li>
+                }
+
 
             </ul>
             @*Dropdown toggle, permite algunas opciones de menu para loguearse o para el usuario logueado*@
@@ -385,7 +400,7 @@
         }
         else {
 
-        
+
              $.ajax({
                 url: '@Url.Action("GuardarViaje","Viaje")',
                 data: {
