@@ -19,24 +19,51 @@ namespace UnAventon.Controllers
             Usuarios usuarioLogueado = session.QueryOver<Usuarios>().Where(x => x.Id == ((Usuarios)Session["UsuarioLogueado"]).Id).SingleOrDefault();
             List<Viajes> viajesUsuario = session.QueryOver<Viajes>().Where(x => x.Conductor.Id == usuarioLogueado.Id && (x.Estado != "" || x.Estado != "Cerrado")).List().ToList();
             List<Pasajeros> pasajerosUsuario = session.QueryOver<Pasajeros>().Where(x => x.Usuario.Id == usuarioLogueado.Id).List().ToList();
-            foreach(Pasajeros p in pasajerosUsuario)
+            foreach (Pasajeros p in pasajerosUsuario)
             {
                 viajesUsuario.Add(session.QueryOver<Viajes>().Where(x => x.Id == p.Viaje).SingleOrDefault());
             }
             ViewBag.ViajesUsuario = viajesUsuario;
             return View(usuarioLogueado);
         }
+
+        public JsonResult CerrarCuenta(string contraseña)
+        {
+            long idUsuario = ((Usuarios)Session["UsuarioLogueado"]).Id;
+            ISession session = NHibernateHelper.GetCurrentSession();
+            List<Viajes> viajesNoCerrados = session.QueryOver<Viajes>().Where(x => x.Conductor.Id == idUsuario && x.Estado != "CERRADO").List().ToList();
+            if (viajesNoCerrados.Count > 0)
+            {
+                return Json(new { mensaje = "Debe cerrar todos sus viajes activos para eliminar su ususario." }, JsonRequestBehavior.AllowGet);
+
+            }
+            Usuarios usuario = session.Get<Usuarios>(idUsuario);
+            if (contraseña.Equals(usuario.Password))
+            {
+                session.Delete(usuario);
+                session.Flush();
+                Session["UsuarioLogueado"] = null;
+            }
+            else
+            {
+                return Json(new { mensaje = "La contraseña no es correcta." }, JsonRequestBehavior.AllowGet);
+
+            }
+            return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
+
+        }
+
         public JsonResult EditarAuto(string marca, string modelo, string patente, string asientos, string idAuto)
         {
             try
             {
-                if(string.IsNullOrEmpty(marca) || string.IsNullOrEmpty(modelo) || string.IsNullOrEmpty(asientos) || string.IsNullOrEmpty(idAuto))
+                if (string.IsNullOrEmpty(marca) || string.IsNullOrEmpty(modelo) || string.IsNullOrEmpty(asientos) || string.IsNullOrEmpty(idAuto))
                 {
                     return Json(new { mensaje = "Todos los campos son obligatorios." }, JsonRequestBehavior.AllowGet);
                 }
                 ISession session = NHibernateHelper.GetCurrentSession();
                 List<Viajes> viajesDelAuto = session.QueryOver<Viajes>().Where(x => x.Auto.Id == long.Parse(idAuto)).List().ToList();
-                if(viajesDelAuto.Any(x=>x.FechaBaja == null))
+                if (viajesDelAuto.Any(x => x.FechaBaja == null))
                 {
                     return Json(new { mensaje = "El auto se encuentra en un viaje activo y no puede ser modificado." }, JsonRequestBehavior.AllowGet);
 
@@ -94,7 +121,7 @@ namespace UnAventon.Controllers
             }
         }
 
-        
+
         public JsonResult BorrarAuto(string id)
         {
             try

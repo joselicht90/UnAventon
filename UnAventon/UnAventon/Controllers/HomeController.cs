@@ -135,9 +135,8 @@ namespace UnAventon.Controllers
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult Contacto()
         {
-            ViewBag.Message = "Your contact page.";
 
             return View();
         }

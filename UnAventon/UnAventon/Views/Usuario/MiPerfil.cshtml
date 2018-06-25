@@ -53,6 +53,8 @@
                 <div class="container">
                     <div class="row">
                         <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:left" onclick="CerrarCuenta()">Eliminar Cuenta</button>
+
+                        <button class="navbar-btn btn btn-primary btn-lg roundNavBar" style="color:aliceblue; float:left" onclick="CambiarContraseña()">Cambiar Contraseña</button>
                     </div>
                 </div>
             </div>
@@ -63,6 +65,7 @@
 @Html.Partial("_NuevoAuto")
 @Html.Partial("_EditarAuto")
 @Html.Partial("_CerrarCuenta")
+@Html.Partial("_CambiarConstraseña")
 @section Scripts{
     <script src="~/Scripts/jquery.loadingModal.js"></script>
     <script src="~/Scripts/datatables.js"></script>
@@ -97,7 +100,54 @@
     });
 
     function CerrarCuenta() {
+        $("#modalCerrarCuenta").modal();
+        }
+        function CambiarConstreña() {
+            $("#modalCambiarConstraseña").modal();
+        }
+    function confirmarCierre() {
+        swal({
+            title: "",
+            text: "Esta seguro que quiere eliminar su cuenta?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            closeOnConfirm: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                    url: '@Url.Action("CerrarCuenta","Usuario")',
+                    data: {
+                        contraseña: $("#contraseñaCerrar").val()
+                    },
+                    beforeSend: function (xhr) {
+                        //Template de loading
+                        Loading();
+                    },
+                    success: function (data) {
+                        if (data.mensaje == ""){
+                            $("body").loadingModal('hide');
+                            window.location.href = "@Url.Action("Index", "Home")"
+                        }
+                        else {
+                            $("#modalCerrarCuenta").modal("hide");
+                            $("body").loadingModal('hide');
+                            swal({
+                                title: "",
+                                text: data.mensaje,
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Aceptar',
+                                closeOnConfirm: true
+                            })
+                        }
 
+                    }
+                    });
+                }
+            }
+        );
     }
     function editarAuto(marca, modelo, patente, asientos, idAuto) {
         $("#modalAutoEditar").modal();

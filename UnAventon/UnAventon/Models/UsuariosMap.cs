@@ -19,7 +19,7 @@ namespace UnAventon.Models
             Map(x => x.CReputacion, "C_REPUTACION").Not.Nullable();
             Map(x => x.PReputacion, "P_REPUTACION").Not.Nullable();
             Map(x => x.Password, "PASSWORD").Not.Nullable();
-            HasMany(x => x.Autos).KeyColumn("USUARIO_ID").Cascade.All();
+            HasMany(x => x.Autos).KeyColumn("USUARIO_ID").Cascade.AllDeleteOrphan();
         }
     }
 }

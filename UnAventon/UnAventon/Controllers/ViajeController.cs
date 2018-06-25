@@ -96,9 +96,18 @@ namespace UnAventon.Controllers
             try
             {
                 ISession session = NHibernateHelper.GetCurrentSession();
+                Usuarios usuarioLogueado = (Usuarios)Session["UsuarioLogueado"];
+                List<Viajes> viajesSinCalificar = session.QueryOver<Viajes>().Where(x => x.Conductor.Id == usuarioLogueado.Id && (x.Estado == "EN_CURSO" || x.Estado == "CERRADO")).List().ToList();
+                List<Pasajeros> pasajerosUsuario = session.QueryOver<Pasajeros>().Where(x => x.Usuario.Id == usuarioLogueado.Id).List().ToList();
+
+                if (viajesSinCalificar.Any(v => v.Pasajeros.Any(p => p.Estado != "Calificado")))
+                {
+                    return Json(new { mensaje = "Tienes calificaciones pendientes de pasajeros." }, JsonRequestBehavior.AllowGet);
+
+                }
                 using (ITransaction transaction = session.BeginTransaction())
                 {
-                    Usuarios usuarioLogueado = (Usuarios)Session["UsuarioLogueado"];
+                    
                     Viajes viaje = (Viajes)session.Get(typeof(Viajes), idViaje);
                     int cantidadPasajeros = viaje.Pasajeros.Where(x => x.Estado.Equals("Aceptado")).Count();
                     if (cantidadPasajeros == viaje.Auto.Asientos)
@@ -234,7 +243,7 @@ namespace UnAventon.Controllers
                     {
                         return Json(new { mensaje = "Debe calificar a sus pasajeros para poder finalizar el viaje." }, JsonRequestBehavior.AllowGet);
                     }
-                    viaje.Estado = "FINALIZADO";
+                    viaje.Estado = "CERRADO";
                     session.Update(viaje);
                     transaction.Commit();
                     return Json(new { mensaje = "" }, JsonRequestBehavior.AllowGet);
@@ -412,6 +421,7 @@ namespace UnAventon.Controllers
             Usuarios usuarioLogueado = (Usuarios)Session["UsuarioLogueado"];
             try
             {
+                
                 if (costo.Contains('.') || costo.Contains(','))
                 {
                     return Json(new { mensaje = "Debe ingresar un costo en valores enteros." }, JsonRequestBehavior.AllowGet);
@@ -433,6 +443,24 @@ namespace UnAventon.Controllers
 
                 }
                 ISession session = NHibernateHelper.GetCurrentSession();
+                List<Viajes> viajesSinCalificar = session.QueryOver<Viajes>().Where(x => x.Conductor.Id == usuarioLogueado.Id && (x.Estado == "EN_CURSO" || x.Estado == "CERRADO")).List().ToList();
+                List<Pasajeros> pasajerosUsuario = session.QueryOver<Pasajeros>().Where(x => x.Usuario.Id == usuarioLogueado.Id).List().ToList();
+                
+                if (viajesSinCalificar.Any(v => v.Pasajeros.Any(p => p.Estado != "Calificado")))
+                {
+                    return Json(new { mensaje = "Tienes calificaciones pendientes de pasajeros." }, JsonRequestBehavior.AllowGet);
+
+                }
+                viajesSinCalificar = new List<Viajes>();
+                foreach (Pasajeros p in pasajerosUsuario)
+                {
+                    viajesSinCalificar.Add(session.QueryOver<Viajes>().Where(x => x.Id == p.Viaje && (x.Estado == "EN_CURSO" || x.Estado == "CERRADO")).SingleOrDefault());
+                }
+                if(viajesSinCalificar.Any(x=>x.CalificacionConductor == null))
+                {
+                    return Json(new { mensaje = "Tienes calificaciones pendientes de conductores." }, JsonRequestBehavior.AllowGet);
+
+                }
                 using (ITransaction transaction = session.BeginTransaction())
                 {
                     if (tipo.Equals("0"))

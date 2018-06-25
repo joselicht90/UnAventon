@@ -1,7 +1,48 @@
 ﻿@{
-    ViewBag.Title = "About";
+    ViewBag.Title = "Ayuda";
 }
 <h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
-
-<p>Use this area to provide additional information.</p>
+<div id="accordion">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Debo pagar para registrarme?
+                </button>
+            </h5>
+        </div>
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                No, el registro de usuarios es totalmente gratuito.
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" id="headingTwo">
+            <h5 class="mb-0">
+                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Y para publicar un viaje?
+                </button>
+            </h5>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+            <div class="card-body">
+                La publicacion tiene un costo asociado en forma de comision. Una vez finalizado el viaje se te descontara del pago un 10%.
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" id="headingThree">
+            <h5 class="mb-0">
+                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Puedo publicar viajes de forma inlimitada?
+                </button>
+            </h5>
+        </div>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+            <div class="card-body">
+                Si, no hay limite a la cantidad de viajes q puedes publicar en tanto no se superpongan. Una vez finalizado un viaje, debes calificar a tus pasajeros o a tu conductor para poder publicar o registrarte en un nuevo viaje
+            </div>
+        </div>
+    </div>
+</div>
